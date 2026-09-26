@@ -1,0 +1,1026 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tree of Heaven Tracker</title>
+<style>
+  :root {
+    --bg: #f4f6f1;
+    --card: #ffffff;
+    --text: #1f2a1a;
+    --muted: #5c6b52;
+    --accent: #3f7d3a;
+    --accent-dark: #2d5c29;
+    --danger: #b3452c;
+    --border: #dbe3d4;
+    --warn-bg: #fdf3e3;
+    --warn-text: #7a5417;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14180f;
+      --card: #1e2517;
+      --text: #e9efe2;
+      --muted: #9db08e;
+      --accent: #6fbf5f;
+      --accent-dark: #8fd67f;
+      --danger: #e07a5f;
+      --border: #2c3624;
+      --warn-bg: #332a15;
+      --warn-text: #ecc987;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14180f;
+    --card: #1e2517;
+    --text: #e9efe2;
+    --muted: #9db08e;
+    --accent: #6fbf5f;
+    --accent-dark: #8fd67f;
+    --danger: #e07a5f;
+    --border: #2c3624;
+    --warn-bg: #332a15;
+    --warn-text: #ecc987;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    -webkit-text-size-adjust: 100%;
+  }
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 16px 48px;
+  }
+  header { text-align: center; margin-bottom: 18px; }
+  header .emoji { font-size: 40px; }
+  h1 { font-size: 22px; margin: 6px 0 4px; }
+  .sub {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.4;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .card h2 {
+    font-size: 15px;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .notice {
+    background: var(--warn-bg);
+    color: var(--warn-text);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 4px; }
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    font-family: inherit;
+  }
+  textarea { resize: vertical; min-height: 50px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  button {
+    font-family: inherit;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 16px;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    width: 100%;
+    margin-top: 14px;
+    font-weight: 600;
+  }
+  .btn-primary:active { background: var(--accent-dark); }
+  .entry {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .entry .info { font-size: 13px; line-height: 1.5; }
+  .entry .date { font-weight: 700; color: var(--accent-dark); }
+  .entry .state-tag {
+    display: inline-block;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1px 6px;
+    font-size: 11px;
+    margin-left: 6px;
+    color: var(--muted);
+  }
+  .entry .notes { color: var(--muted); }
+  .status-pill {
+    display: inline-block;
+    font-size: 11px;
+    border-radius: 6px;
+    padding: 1px 6px;
+    margin-left: 4px;
+  }
+  .status-none { background: #eee; color: #777; }
+  .status-monitoring { background: #fde9c8; color: #8a5a12; }
+  .status-cleared { background: #d7f0d2; color: #2d5c29; }
+  .del { background: none; color: var(--danger); font-size: 18px; padding: 2px 6px; }
+  .empty { color: var(--muted); font-size: 14px; text-align: center; padding: 12px 0; }
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; text-align: center; }
+  .stat { background: var(--bg); border-radius: 10px; padding: 10px 4px; }
+  .stat .num { font-size: 18px; font-weight: 700; color: var(--accent-dark); }
+  .stat .lbl { font-size: 11px; color: var(--muted); }
+  .state-rank { font-size: 13px; margin-top: 10px; }
+  .state-rank-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .state-rank-row:last-child { border-bottom: none; }
+  svg { width: 100%; height: auto; display: block; }
+  .why { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .why b { color: var(--text); }
+  .toast {
+    position: fixed;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    opacity: 0;
+    transition: all 0.25s ease;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .filter-row { margin-bottom: 10px; }
+  table.forecast { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.forecast th, table.forecast td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--border); }
+  table.forecast th:first-child, table.forecast td:first-child { text-align: left; }
+  table.forecast th { color: var(--muted); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="emoji">🌳</div>
+    <h1>Tree of Heaven Tracker</h1>
+    <div class="sub">Log Tree of Heaven sightings across states, watch where it's most concentrated, and track treatment progress over a five-year window.</div>
+  </header>
+
+  <div class="notice">
+    ⏰ <b>Heads up:</b> this page can't send you a notification on its own after five years — browsers don't allow that. Set a calendar reminder for your five-year check-in date; all the data here will be waiting and ready when you open it again.
+  </div>
+
+  <div class="card">
+    <h2>🔍 Why we're measuring</h2>
+    <div class="why">
+      Tree of Heaven is an <b>invasive species</b> that spreads fast. Tracking where it's most concentrated across states
+      helps build a data-backed case for where treatment should be prioritized first.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📍 Trees Near Me</h2>
+    <div class="why" style="margin-bottom:10px;">
+      Checks your device's current location against everything logged so far, and tells you if any Tree of Heaven
+      has been recorded near you (within about 30 miles) or anywhere in your state.
+    </div>
+    <button class="btn-primary" onclick="checkNearMe()">Check My Area</button>
+    <div id="nearme-result" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card">
+    <h2>🧪 Sample Data</h2>
+    <div class="why" style="margin-bottom:10px;">
+      This loads <b>made-up example data</b> — one entry per year for 5 years (2022–2026), for all 50 states —
+      so you can see how the charts and rankings look with a full dataset. It's simulated, not real field data,
+      so swap it out for your own measurements as you collect them.
+    </div>
+    <button class="btn-primary" style="background:var(--accent-dark);" onclick="loadSampleData()">Load Sample Data (all states, 5 years)</button>
+    <button class="btn-primary" style="background:var(--danger); margin-top:8px;" onclick="clearAllData()">Clear All Data</button>
+  </div>
+
+  <div class="card">
+    <h2>➕ New Sighting / Measurement</h2>
+    <div class="row2">
+      <div>
+        <label>Date</label>
+        <input type="date" id="f-date">
+      </div>
+      <div>
+        <label>State</label>
+        <select id="f-state">
+          <option value="">Select a state</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Location details (be specific — you'll want to find this spot again)</label>
+    <input type="text" id="f-location" placeholder="e.g. Rt 50 roadside, mile marker 12">
+    <button type="button" class="btn-primary" style="background:var(--accent-dark); margin-top:6px;" onclick="useMyLocationForEntry()">📍 Use My Current Location</button>
+    <div id="f-location-status" style="font-size:12px; color:var(--muted); margin-top:4px;"></div>
+
+    <div class="row3">
+      <div>
+        <label>Height (ft)</label>
+        <input type="number" step="0.1" id="f-height" placeholder="6.5">
+      </div>
+      <div>
+        <label>Trunk (in)</label>
+        <input type="number" step="0.1" id="f-diameter" placeholder="1.2">
+      </div>
+      <div>
+        <label># of trees</label>
+        <input type="number" id="f-count" placeholder="4">
+      </div>
+    </div>
+
+    <label>Treatment status</label>
+    <select id="f-status">
+      <option value="none">Not treated</option>
+      <option value="monitoring">Treated — monitoring</option>
+      <option value="cleared">Treated — cleared</option>
+    </select>
+
+    <label>Notes</label>
+    <textarea id="f-notes" placeholder="Optional notes..."></textarea>
+
+    <button class="btn-primary" onclick="addEntry()">Save Entry</button>
+  </div>
+
+  <div class="card">
+    <h2>🗺️ Most Affected States</h2>
+    <div class="why" style="margin-bottom:10px;">Top 10 states by total trees counted. Use the dropdown to check any other state.</div>
+    <div id="state-rank-chart"></div>
+    <div class="filter-row" style="margin-top:14px;">
+      <label style="margin:0 0 4px;">Check another state</label>
+      <select id="state-rank-other" onchange="renderStateRank(loadEntries())">
+        <option value="">Select a state not in the top 10</option>
+      </select>
+    </div>
+    <div id="state-rank-other-result" style="margin-top:8px;"></div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Average Height Over Time</h2>
+    <div class="filter-row">
+      <label style="margin:0 0 4px;">Filter by state</label>
+      <select id="chart-filter" onchange="render()">
+        <option value="">All states combined (average)</option>
+      </select>
+    </div>
+    <div id="chart-height"></div>
+  </div>
+
+
+  <div class="card">
+    <h2>🌱 Total Tree Count Over Time</h2>
+    <div class="why" style="margin-bottom:8px;">Sum of all trees counted, across the states selected above, per year.</div>
+    <div id="chart-count"></div>
+  </div>
+
+  <div class="card">
+    <h2>🚦 Treatment Status Breakdown by Year</h2>
+    <div class="why" style="margin-bottom:8px;">Not treated vs. monitoring vs. cleared, as a share of total trees counted each year — for quick go/no-go decisions.</div>
+    <div id="chart-status"></div>
+  </div>
+
+  <div class="card">
+    <h2>🚁 5-Year Treatment Forecast</h2>
+    <div class="why" style="margin-bottom:10px;">
+      Models your drone + <i>Verticillium nonalfalfae</i> fungus plan against the top 5 states with the most
+      Tree of Heaven, based on the most recent count logged for each state. Adjust the assumptions and re-run.
+    </div>
+    <div class="row3">
+      <div>
+        <label># of drones</label>
+        <input type="number" id="fc-drones" value="2" min="1">
+      </div>
+      <div>
+        <label>Trees treated / drone / yr</label>
+        <input type="number" id="fc-rate" value="50" min="1">
+      </div>
+      <div>
+        <label>Untreated growth %/yr</label>
+        <input type="number" id="fc-growth" value="10" min="0">
+      </div>
+    </div>
+    <button class="btn-primary" onclick="runForecast()">Run 5-Year Forecast</button>
+    <div id="forecast-summary" style="margin-top:14px;"></div>
+    <div id="forecast-chart"></div>
+  </div>
+
+  <div class="card">
+    <h2>📈 Summary</h2>
+    <div class="stat-grid" id="stats"></div>
+  </div>
+
+  <div class="card">
+    <h2 style="cursor:pointer; justify-content:space-between;" onclick="toggleHistory()">
+      <span>📋 Full History <span id="history-count" style="font-weight:400; color:var(--muted); font-size:12px;"></span></span>
+      <span id="history-toggle-icon">▸</span>
+    </h2>
+    <div id="history-body" style="display:none;">
+      <input type="text" id="history-search" placeholder="Search by state, location, or notes…" oninput="renderHistory(loadEntries())" style="margin-bottom:10px;">
+      <div id="history"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Saved!</div>
+
+<script>
+const STORAGE_KEY = 'toh-measurements-v2';
+const OLD_STORAGE_KEY = 'toh-measurements';
+
+const STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware",
+"Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine",
+"Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada",
+"New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma",
+"Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont",
+"Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+
+function populateStateOptions() {
+  const sel = document.getElementById('f-state');
+  const filt = document.getElementById('chart-filter');
+  STATES.forEach(s => {
+    const o1 = document.createElement('option'); o1.value = s; o1.textContent = s;
+    sel.appendChild(o1);
+    const o2 = document.createElement('option'); o2.value = s; o2.textContent = s;
+    filt.appendChild(o2);
+  });
+}
+
+const SAMPLE_DATA = [{"id": 1000, "date": "2021-09-19", "state": "Alabama", "location": "Riverbank trail", "height": 2.3, "diameter": 0.3, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1001, "date": "2022-09-19", "state": "Alabama", "location": "Riverbank trail", "height": 3.2, "diameter": 0.5, "count": 0, "status": "none", "notes": ""}, {"id": 1002, "date": "2023-09-19", "state": "Alabama", "location": "Riverbank trail", "height": 4.0, "diameter": 0.5, "count": 0, "status": "none", "notes": ""}, {"id": 1003, "date": "2024-09-19", "state": "Alabama", "location": "Riverbank trail", "height": 5.3, "diameter": 0.8, "count": 0, "status": "none", "notes": ""}, {"id": 1004, "date": "2025-09-19", "state": "Alabama", "location": "Riverbank trail", "height": 6.8, "diameter": 0.9, "count": 3, "status": "none", "notes": ""}, {"id": 1005, "date": "2026-09-19", "state": "Alabama", "location": "Riverbank trail", "height": 8.2, "diameter": 1.4, "count": 3, "status": "none", "notes": ""}, {"id": 1006, "date": "2021-09-19", "state": "Alaska", "location": "Community park edge", "height": 1.0, "diameter": 0.2, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1007, "date": "2022-09-19", "state": "Alaska", "location": "Community park edge", "height": 1.5, "diameter": 0.2, "count": 0, "status": "none", "notes": ""}, {"id": 1008, "date": "2023-09-19", "state": "Alaska", "location": "Community park edge", "height": 2.1, "diameter": 0.3, "count": 1, "status": "none", "notes": ""}, {"id": 1009, "date": "2024-09-19", "state": "Alaska", "location": "Community park edge", "height": 3.0, "diameter": 0.5, "count": 2, "status": "none", "notes": ""}, {"id": 1010, "date": "2025-09-19", "state": "Alaska", "location": "Community park edge", "height": 4.0, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1011, "date": "2026-09-19", "state": "Alaska", "location": "Community park edge", "height": 4.5, "diameter": 0.7, "count": 4, "status": "none", "notes": ""}, {"id": 1012, "date": "2021-09-19", "state": "Arizona", "location": "Suburban roadside", "height": 1.5, "diameter": 0.3, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1013, "date": "2022-09-19", "state": "Arizona", "location": "Suburban roadside", "height": 2.4, "diameter": 0.3, "count": 2, "status": "none", "notes": ""}, {"id": 1014, "date": "2023-09-19", "state": "Arizona", "location": "Suburban roadside", "height": 3.1, "diameter": 0.4, "count": 3, "status": "none", "notes": ""}, {"id": 1015, "date": "2024-09-19", "state": "Arizona", "location": "Suburban roadside", "height": 3.6, "diameter": 0.6, "count": 4, "status": "none", "notes": ""}, {"id": 1016, "date": "2025-09-19", "state": "Arizona", "location": "Suburban roadside", "height": 4.4, "diameter": 0.7, "count": 4, "status": "none", "notes": ""}, {"id": 1017, "date": "2026-09-19", "state": "Arizona", "location": "Suburban roadside", "height": 4.8, "diameter": 0.6, "count": 4, "status": "none", "notes": ""}, {"id": 1018, "date": "2021-09-19", "state": "Arkansas", "location": "Park boundary", "height": 2.4, "diameter": 0.4, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1019, "date": "2022-09-19", "state": "Arkansas", "location": "Park boundary", "height": 3.6, "diameter": 0.5, "count": 0, "status": "none", "notes": ""}, {"id": 1020, "date": "2023-09-19", "state": "Arkansas", "location": "Park boundary", "height": 5.3, "diameter": 0.7, "count": 2, "status": "none", "notes": ""}, {"id": 1021, "date": "2024-09-19", "state": "Arkansas", "location": "Park boundary", "height": 6.6, "diameter": 0.8, "count": 5, "status": "none", "notes": ""}, {"id": 1022, "date": "2025-09-19", "state": "Arkansas", "location": "Park boundary", "height": 7.5, "diameter": 1.2, "count": 7, "status": "none", "notes": ""}, {"id": 1023, "date": "2026-09-19", "state": "Arkansas", "location": "Park boundary", "height": 8.7, "diameter": 1.2, "count": 10, "status": "none", "notes": ""}, {"id": 1024, "date": "2021-09-19", "state": "California", "location": "Highway median", "height": 2.0, "diameter": 0.3, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1025, "date": "2022-09-19", "state": "California", "location": "Highway median", "height": 3.0, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1026, "date": "2023-09-19", "state": "California", "location": "Highway median", "height": 4.2, "diameter": 0.6, "count": 6, "status": "none", "notes": ""}, {"id": 1027, "date": "2024-09-19", "state": "California", "location": "Highway median", "height": 6.0, "diameter": 1.0, "count": 6, "status": "none", "notes": ""}, {"id": 1028, "date": "2025-09-19", "state": "California", "location": "Highway median", "height": 6.9, "diameter": 1.1, "count": 8, "status": "none", "notes": ""}, {"id": 1029, "date": "2026-09-19", "state": "California", "location": "Highway median", "height": 8.0, "diameter": 1.2, "count": 10, "status": "none", "notes": ""}, {"id": 1030, "date": "2021-09-19", "state": "Colorado", "location": "Abandoned field", "height": 2.9, "diameter": 0.5, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1031, "date": "2022-09-19", "state": "Colorado", "location": "Abandoned field", "height": 4.0, "diameter": 0.5, "count": 2, "status": "none", "notes": ""}, {"id": 1032, "date": "2023-09-19", "state": "Colorado", "location": "Abandoned field", "height": 5.6, "diameter": 0.9, "count": 2, "status": "none", "notes": ""}, {"id": 1033, "date": "2024-09-19", "state": "Colorado", "location": "Abandoned field", "height": 6.9, "diameter": 1.2, "count": 2, "status": "none", "notes": ""}, {"id": 1034, "date": "2025-09-19", "state": "Colorado", "location": "Abandoned field", "height": 8.6, "diameter": 1.2, "count": 4, "status": "none", "notes": ""}, {"id": 1035, "date": "2026-09-19", "state": "Colorado", "location": "Abandoned field", "height": 9.6, "diameter": 1.2, "count": 4, "status": "none", "notes": ""}, {"id": 1036, "date": "2021-09-19", "state": "Connecticut", "location": "Park boundary", "height": 3.0, "diameter": 0.4, "count": 4, "status": "none", "notes": "Sample data"}, {"id": 1037, "date": "2022-09-19", "state": "Connecticut", "location": "Park boundary", "height": 4.3, "diameter": 0.7, "count": 6, "status": "none", "notes": ""}, {"id": 1038, "date": "2023-09-19", "state": "Connecticut", "location": "Park boundary", "height": 5.7, "diameter": 1.0, "count": 7, "status": "none", "notes": ""}, {"id": 1039, "date": "2024-09-19", "state": "Connecticut", "location": "Park boundary", "height": 7.3, "diameter": 1.2, "count": 8, "status": "none", "notes": ""}, {"id": 1040, "date": "2025-09-19", "state": "Connecticut", "location": "Park boundary", "height": 8.5, "diameter": 1.2, "count": 10, "status": "monitoring", "notes": ""}, {"id": 1041, "date": "2026-09-19", "state": "Connecticut", "location": "Park boundary", "height": 9.1, "diameter": 1.2, "count": 12, "status": "monitoring", "notes": ""}, {"id": 1042, "date": "2021-09-19", "state": "Delaware", "location": "Forest edge clearing", "height": 3.8, "diameter": 0.6, "count": 3, "status": "none", "notes": "Sample data"}, {"id": 1043, "date": "2022-09-19", "state": "Delaware", "location": "Forest edge clearing", "height": 5.4, "diameter": 0.9, "count": 5, "status": "none", "notes": ""}, {"id": 1044, "date": "2023-09-19", "state": "Delaware", "location": "Forest edge clearing", "height": 8.2, "diameter": 1.2, "count": 7, "status": "none", "notes": ""}, {"id": 1045, "date": "2024-09-19", "state": "Delaware", "location": "Forest edge clearing", "height": 10.1, "diameter": 1.3, "count": 12, "status": "monitoring", "notes": ""}, {"id": 1046, "date": "2025-09-19", "state": "Delaware", "location": "Forest edge clearing", "height": 11.4, "diameter": 2.0, "count": 11, "status": "monitoring", "notes": ""}, {"id": 1047, "date": "2026-09-19", "state": "Delaware", "location": "Forest edge clearing", "height": 12.5, "diameter": 2.1, "count": 13, "status": "cleared", "notes": ""}, {"id": 1048, "date": "2021-09-19", "state": "Florida", "location": "Farm field border", "height": 0.6, "diameter": 0.1, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1049, "date": "2022-09-19", "state": "Florida", "location": "Farm field border", "height": 1.2, "diameter": 0.2, "count": 1, "status": "none", "notes": ""}, {"id": 1050, "date": "2023-09-19", "state": "Florida", "location": "Farm field border", "height": 2.2, "diameter": 0.3, "count": 1, "status": "none", "notes": ""}, {"id": 1051, "date": "2024-09-19", "state": "Florida", "location": "Farm field border", "height": 3.0, "diameter": 0.4, "count": 1, "status": "none", "notes": ""}, {"id": 1052, "date": "2025-09-19", "state": "Florida", "location": "Farm field border", "height": 3.4, "diameter": 0.4, "count": 2, "status": "none", "notes": ""}, {"id": 1053, "date": "2026-09-19", "state": "Florida", "location": "Farm field border", "height": 3.8, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1054, "date": "2021-09-19", "state": "Georgia", "location": "Highway median", "height": 2.6, "diameter": 0.5, "count": 4, "status": "none", "notes": "Sample data"}, {"id": 1055, "date": "2022-09-19", "state": "Georgia", "location": "Highway median", "height": 4.2, "diameter": 0.7, "count": 4, "status": "none", "notes": ""}, {"id": 1056, "date": "2023-09-19", "state": "Georgia", "location": "Highway median", "height": 5.8, "diameter": 0.8, "count": 5, "status": "none", "notes": ""}, {"id": 1057, "date": "2024-09-19", "state": "Georgia", "location": "Highway median", "height": 7.1, "diameter": 1.2, "count": 8, "status": "none", "notes": ""}, {"id": 1058, "date": "2025-09-19", "state": "Georgia", "location": "Highway median", "height": 8.1, "diameter": 1.5, "count": 8, "status": "monitoring", "notes": ""}, {"id": 1059, "date": "2026-09-19", "state": "Georgia", "location": "Highway median", "height": 9.0, "diameter": 1.5, "count": 8, "status": "monitoring", "notes": ""}, {"id": 1060, "date": "2021-09-19", "state": "Hawaii", "location": "Trailhead parking area", "height": 1.9, "diameter": 0.2, "count": 2, "status": "none", "notes": "Sample data"}, {"id": 1061, "date": "2022-09-19", "state": "Hawaii", "location": "Trailhead parking area", "height": 2.4, "diameter": 0.4, "count": 2, "status": "none", "notes": ""}, {"id": 1062, "date": "2023-09-19", "state": "Hawaii", "location": "Trailhead parking area", "height": 3.1, "diameter": 0.4, "count": 3, "status": "none", "notes": ""}, {"id": 1063, "date": "2024-09-19", "state": "Hawaii", "location": "Trailhead parking area", "height": 3.8, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1064, "date": "2025-09-19", "state": "Hawaii", "location": "Trailhead parking area", "height": 4.5, "diameter": 0.6, "count": 3, "status": "none", "notes": ""}, {"id": 1065, "date": "2026-09-19", "state": "Hawaii", "location": "Trailhead parking area", "height": 4.8, "diameter": 0.7, "count": 3, "status": "none", "notes": ""}, {"id": 1066, "date": "2021-09-19", "state": "Idaho", "location": "Reservoir access road", "height": 1.4, "diameter": 0.2, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1067, "date": "2022-09-19", "state": "Idaho", "location": "Reservoir access road", "height": 2.2, "diameter": 0.4, "count": 1, "status": "none", "notes": ""}, {"id": 1068, "date": "2023-09-19", "state": "Idaho", "location": "Reservoir access road", "height": 2.6, "diameter": 0.3, "count": 2, "status": "none", "notes": ""}, {"id": 1069, "date": "2024-09-19", "state": "Idaho", "location": "Reservoir access road", "height": 3.2, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1070, "date": "2025-09-19", "state": "Idaho", "location": "Reservoir access road", "height": 4.2, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1071, "date": "2026-09-19", "state": "Idaho", "location": "Reservoir access road", "height": 4.9, "diameter": 0.6, "count": 3, "status": "none", "notes": ""}, {"id": 1072, "date": "2021-09-19", "state": "Illinois", "location": "Roadside embankment", "height": 2.4, "diameter": 0.3, "count": 4, "status": "none", "notes": "Sample data"}, {"id": 1073, "date": "2022-09-19", "state": "Illinois", "location": "Roadside embankment", "height": 4.1, "diameter": 0.7, "count": 10, "status": "none", "notes": ""}, {"id": 1074, "date": "2023-09-19", "state": "Illinois", "location": "Roadside embankment", "height": 6.5, "diameter": 0.8, "count": 16, "status": "none", "notes": ""}, {"id": 1075, "date": "2024-09-19", "state": "Illinois", "location": "Roadside embankment", "height": 9.2, "diameter": 1.6, "count": 20, "status": "none", "notes": ""}, {"id": 1076, "date": "2025-09-19", "state": "Illinois", "location": "Roadside embankment", "height": 10.9, "diameter": 1.5, "count": 23, "status": "none", "notes": ""}, {"id": 1077, "date": "2026-09-19", "state": "Illinois", "location": "Roadside embankment", "height": 13.7, "diameter": 1.8, "count": 29, "status": "none", "notes": ""}, {"id": 1078, "date": "2021-09-19", "state": "Indiana", "location": "Vacant lot edge", "height": 4.2, "diameter": 0.6, "count": 3, "status": "none", "notes": "Sample data"}, {"id": 1079, "date": "2022-09-19", "state": "Indiana", "location": "Vacant lot edge", "height": 7.1, "diameter": 0.9, "count": 5, "status": "none", "notes": ""}, {"id": 1080, "date": "2023-09-19", "state": "Indiana", "location": "Vacant lot edge", "height": 9.2, "diameter": 1.1, "count": 9, "status": "none", "notes": ""}, {"id": 1081, "date": "2024-09-19", "state": "Indiana", "location": "Vacant lot edge", "height": 11.2, "diameter": 1.8, "count": 12, "status": "none", "notes": ""}, {"id": 1082, "date": "2025-09-19", "state": "Indiana", "location": "Vacant lot edge", "height": 13.1, "diameter": 2.0, "count": 17, "status": "none", "notes": ""}, {"id": 1083, "date": "2026-09-19", "state": "Indiana", "location": "Vacant lot edge", "height": 15.2, "diameter": 1.9, "count": 19, "status": "none", "notes": ""}, {"id": 1084, "date": "2021-09-19", "state": "Iowa", "location": "Abandoned field", "height": 2.1, "diameter": 0.3, "count": 2, "status": "none", "notes": "Sample data"}, {"id": 1085, "date": "2022-09-19", "state": "Iowa", "location": "Abandoned field", "height": 2.9, "diameter": 0.5, "count": 4, "status": "none", "notes": ""}, {"id": 1086, "date": "2023-09-19", "state": "Iowa", "location": "Abandoned field", "height": 4.5, "diameter": 0.8, "count": 4, "status": "none", "notes": ""}, {"id": 1087, "date": "2024-09-19", "state": "Iowa", "location": "Abandoned field", "height": 5.5, "diameter": 0.9, "count": 5, "status": "none", "notes": ""}, {"id": 1088, "date": "2025-09-19", "state": "Iowa", "location": "Abandoned field", "height": 6.7, "diameter": 1.2, "count": 8, "status": "none", "notes": ""}, {"id": 1089, "date": "2026-09-19", "state": "Iowa", "location": "Abandoned field", "height": 8.2, "diameter": 1.4, "count": 9, "status": "none", "notes": ""}, {"id": 1090, "date": "2021-09-19", "state": "Kansas", "location": "Park boundary", "height": 2.8, "diameter": 0.4, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1091, "date": "2022-09-19", "state": "Kansas", "location": "Park boundary", "height": 4.5, "diameter": 0.6, "count": 1, "status": "none", "notes": ""}, {"id": 1092, "date": "2023-09-19", "state": "Kansas", "location": "Park boundary", "height": 6.1, "diameter": 0.9, "count": 1, "status": "none", "notes": ""}, {"id": 1093, "date": "2024-09-19", "state": "Kansas", "location": "Park boundary", "height": 6.9, "diameter": 0.9, "count": 4, "status": "none", "notes": ""}, {"id": 1094, "date": "2025-09-19", "state": "Kansas", "location": "Park boundary", "height": 8.5, "diameter": 1.2, "count": 7, "status": "none", "notes": ""}, {"id": 1095, "date": "2026-09-19", "state": "Kansas", "location": "Park boundary", "height": 10.1, "diameter": 1.3, "count": 8, "status": "none", "notes": ""}, {"id": 1096, "date": "2021-09-19", "state": "Kentucky", "location": "Roadside embankment", "height": 3.0, "diameter": 0.4, "count": 8, "status": "none", "notes": "Sample data"}, {"id": 1097, "date": "2022-09-19", "state": "Kentucky", "location": "Roadside embankment", "height": 5.5, "diameter": 0.9, "count": 13, "status": "none", "notes": ""}, {"id": 1098, "date": "2023-09-19", "state": "Kentucky", "location": "Roadside embankment", "height": 8.3, "diameter": 1.5, "count": 17, "status": "none", "notes": ""}, {"id": 1099, "date": "2024-09-19", "state": "Kentucky", "location": "Roadside embankment", "height": 10.0, "diameter": 1.3, "count": 21, "status": "none", "notes": ""}, {"id": 1100, "date": "2025-09-19", "state": "Kentucky", "location": "Roadside embankment", "height": 12.9, "diameter": 1.6, "count": 25, "status": "none", "notes": ""}, {"id": 1101, "date": "2026-09-19", "state": "Kentucky", "location": "Roadside embankment", "height": 15.3, "diameter": 2.5, "count": 29, "status": "none", "notes": ""}, {"id": 1102, "date": "2021-09-19", "state": "Louisiana", "location": "Industrial lot fence line", "height": 3.0, "diameter": 0.4, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1103, "date": "2022-09-19", "state": "Louisiana", "location": "Industrial lot fence line", "height": 3.8, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1104, "date": "2023-09-19", "state": "Louisiana", "location": "Industrial lot fence line", "height": 5.5, "diameter": 0.8, "count": 4, "status": "none", "notes": ""}, {"id": 1105, "date": "2024-09-19", "state": "Louisiana", "location": "Industrial lot fence line", "height": 6.4, "diameter": 1.0, "count": 6, "status": "none", "notes": ""}, {"id": 1106, "date": "2025-09-19", "state": "Louisiana", "location": "Industrial lot fence line", "height": 7.9, "diameter": 1.3, "count": 6, "status": "none", "notes": ""}, {"id": 1107, "date": "2026-09-19", "state": "Louisiana", "location": "Industrial lot fence line", "height": 9.0, "diameter": 1.4, "count": 8, "status": "none", "notes": ""}, {"id": 1108, "date": "2021-09-19", "state": "Maine", "location": "Industrial lot fence line", "height": 2.1, "diameter": 0.3, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1109, "date": "2022-09-19", "state": "Maine", "location": "Industrial lot fence line", "height": 3.6, "diameter": 0.6, "count": 2, "status": "none", "notes": ""}, {"id": 1110, "date": "2023-09-19", "state": "Maine", "location": "Industrial lot fence line", "height": 4.7, "diameter": 0.6, "count": 2, "status": "none", "notes": ""}, {"id": 1111, "date": "2024-09-19", "state": "Maine", "location": "Industrial lot fence line", "height": 5.7, "diameter": 0.8, "count": 4, "status": "none", "notes": ""}, {"id": 1112, "date": "2025-09-19", "state": "Maine", "location": "Industrial lot fence line", "height": 6.9, "diameter": 1.0, "count": 5, "status": "none", "notes": ""}, {"id": 1113, "date": "2026-09-19", "state": "Maine", "location": "Industrial lot fence line", "height": 8.5, "diameter": 1.4, "count": 6, "status": "none", "notes": ""}, {"id": 1114, "date": "2021-09-19", "state": "Maryland", "location": "Old rail corridor", "height": 2.3, "diameter": 0.3, "count": 8, "status": "none", "notes": "Sample data"}, {"id": 1115, "date": "2022-09-19", "state": "Maryland", "location": "Old rail corridor", "height": 4.1, "diameter": 0.5, "count": 10, "status": "none", "notes": ""}, {"id": 1116, "date": "2023-09-19", "state": "Maryland", "location": "Old rail corridor", "height": 7.1, "diameter": 1.2, "count": 16, "status": "none", "notes": ""}, {"id": 1117, "date": "2024-09-19", "state": "Maryland", "location": "Old rail corridor", "height": 8.7, "diameter": 1.5, "count": 21, "status": "none", "notes": ""}, {"id": 1118, "date": "2025-09-19", "state": "Maryland", "location": "Old rail corridor", "height": 11.1, "diameter": 1.7, "count": 26, "status": "none", "notes": ""}, {"id": 1119, "date": "2026-09-19", "state": "Maryland", "location": "Old rail corridor", "height": 13.0, "diameter": 2.3, "count": 28, "status": "none", "notes": ""}, {"id": 1120, "date": "2021-09-19", "state": "Massachusetts", "location": "Park boundary", "height": 2.6, "diameter": 0.4, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1121, "date": "2022-09-19", "state": "Massachusetts", "location": "Park boundary", "height": 3.9, "diameter": 0.7, "count": 2, "status": "none", "notes": ""}, {"id": 1122, "date": "2023-09-19", "state": "Massachusetts", "location": "Park boundary", "height": 4.8, "diameter": 0.8, "count": 3, "status": "none", "notes": ""}, {"id": 1123, "date": "2024-09-19", "state": "Massachusetts", "location": "Park boundary", "height": 6.3, "diameter": 1.1, "count": 5, "status": "none", "notes": ""}, {"id": 1124, "date": "2025-09-19", "state": "Massachusetts", "location": "Park boundary", "height": 8.0, "diameter": 1.4, "count": 8, "status": "none", "notes": ""}, {"id": 1125, "date": "2026-09-19", "state": "Massachusetts", "location": "Park boundary", "height": 9.3, "diameter": 1.5, "count": 9, "status": "none", "notes": ""}, {"id": 1126, "date": "2021-09-19", "state": "Michigan", "location": "Abandoned field", "height": 2.5, "diameter": 0.3, "count": 2, "status": "none", "notes": "Sample data"}, {"id": 1127, "date": "2022-09-19", "state": "Michigan", "location": "Abandoned field", "height": 3.7, "diameter": 0.5, "count": 4, "status": "none", "notes": ""}, {"id": 1128, "date": "2023-09-19", "state": "Michigan", "location": "Abandoned field", "height": 4.8, "diameter": 0.6, "count": 4, "status": "none", "notes": ""}, {"id": 1129, "date": "2024-09-19", "state": "Michigan", "location": "Abandoned field", "height": 5.8, "diameter": 0.9, "count": 5, "status": "none", "notes": ""}, {"id": 1130, "date": "2025-09-19", "state": "Michigan", "location": "Abandoned field", "height": 6.7, "diameter": 0.9, "count": 8, "status": "none", "notes": ""}, {"id": 1131, "date": "2026-09-19", "state": "Michigan", "location": "Abandoned field", "height": 8.0, "diameter": 1.1, "count": 8, "status": "none", "notes": ""}, {"id": 1132, "date": "2021-09-19", "state": "Minnesota", "location": "Industrial lot fence line", "height": 2.7, "diameter": 0.5, "count": 4, "status": "none", "notes": "Sample data"}, {"id": 1133, "date": "2022-09-19", "state": "Minnesota", "location": "Industrial lot fence line", "height": 3.8, "diameter": 0.7, "count": 7, "status": "none", "notes": ""}, {"id": 1134, "date": "2023-09-19", "state": "Minnesota", "location": "Industrial lot fence line", "height": 5.6, "diameter": 0.9, "count": 10, "status": "none", "notes": ""}, {"id": 1135, "date": "2024-09-19", "state": "Minnesota", "location": "Industrial lot fence line", "height": 7.1, "diameter": 1.1, "count": 11, "status": "none", "notes": ""}, {"id": 1136, "date": "2025-09-19", "state": "Minnesota", "location": "Industrial lot fence line", "height": 8.2, "diameter": 1.0, "count": 14, "status": "none", "notes": ""}, {"id": 1137, "date": "2026-09-19", "state": "Minnesota", "location": "Industrial lot fence line", "height": 9.3, "diameter": 1.5, "count": 17, "status": "none", "notes": ""}, {"id": 1138, "date": "2021-09-19", "state": "Mississippi", "location": "Highway median", "height": 3.0, "diameter": 0.5, "count": 4, "status": "none", "notes": "Sample data"}, {"id": 1139, "date": "2022-09-19", "state": "Mississippi", "location": "Highway median", "height": 4.5, "diameter": 0.7, "count": 4, "status": "none", "notes": ""}, {"id": 1140, "date": "2023-09-19", "state": "Mississippi", "location": "Highway median", "height": 5.4, "diameter": 0.7, "count": 7, "status": "none", "notes": ""}, {"id": 1141, "date": "2024-09-19", "state": "Mississippi", "location": "Highway median", "height": 6.5, "diameter": 0.9, "count": 9, "status": "none", "notes": ""}, {"id": 1142, "date": "2025-09-19", "state": "Mississippi", "location": "Highway median", "height": 7.6, "diameter": 1.0, "count": 12, "status": "none", "notes": ""}, {"id": 1143, "date": "2026-09-19", "state": "Mississippi", "location": "Highway median", "height": 9.4, "diameter": 1.3, "count": 15, "status": "none", "notes": ""}, {"id": 1144, "date": "2021-09-19", "state": "Missouri", "location": "Vacant lot edge", "height": 4.2, "diameter": 0.7, "count": 2, "status": "none", "notes": "Sample data"}, {"id": 1145, "date": "2022-09-19", "state": "Missouri", "location": "Vacant lot edge", "height": 6.7, "diameter": 1.2, "count": 4, "status": "none", "notes": ""}, {"id": 1146, "date": "2023-09-19", "state": "Missouri", "location": "Vacant lot edge", "height": 8.5, "diameter": 1.3, "count": 6, "status": "none", "notes": ""}, {"id": 1147, "date": "2024-09-19", "state": "Missouri", "location": "Vacant lot edge", "height": 10.4, "diameter": 1.7, "count": 11, "status": "monitoring", "notes": ""}, {"id": 1148, "date": "2025-09-19", "state": "Missouri", "location": "Vacant lot edge", "height": 11.9, "diameter": 1.8, "count": 13, "status": "monitoring", "notes": ""}, {"id": 1149, "date": "2026-09-19", "state": "Missouri", "location": "Vacant lot edge", "height": 13.2, "diameter": 1.7, "count": 13, "status": "cleared", "notes": ""}, {"id": 1150, "date": "2021-09-19", "state": "Montana", "location": "Suburban roadside", "height": 0.7, "diameter": 0.1, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1151, "date": "2022-09-19", "state": "Montana", "location": "Suburban roadside", "height": 1.7, "diameter": 0.2, "count": 2, "status": "none", "notes": ""}, {"id": 1152, "date": "2023-09-19", "state": "Montana", "location": "Suburban roadside", "height": 2.5, "diameter": 0.4, "count": 2, "status": "none", "notes": ""}, {"id": 1153, "date": "2024-09-19", "state": "Montana", "location": "Suburban roadside", "height": 3.4, "diameter": 0.4, "count": 2, "status": "none", "notes": ""}, {"id": 1154, "date": "2025-09-19", "state": "Montana", "location": "Suburban roadside", "height": 4.2, "diameter": 0.7, "count": 2, "status": "none", "notes": ""}, {"id": 1155, "date": "2026-09-19", "state": "Montana", "location": "Suburban roadside", "height": 4.9, "diameter": 0.7, "count": 2, "status": "none", "notes": ""}, {"id": 1156, "date": "2021-09-19", "state": "Nebraska", "location": "Highway median", "height": 1.1, "diameter": 0.2, "count": 2, "status": "none", "notes": "Sample data"}, {"id": 1157, "date": "2022-09-19", "state": "Nebraska", "location": "Highway median", "height": 2.0, "diameter": 0.3, "count": 4, "status": "none", "notes": ""}, {"id": 1158, "date": "2023-09-19", "state": "Nebraska", "location": "Highway median", "height": 3.6, "diameter": 0.5, "count": 5, "status": "none", "notes": ""}, {"id": 1159, "date": "2024-09-19", "state": "Nebraska", "location": "Highway median", "height": 5.1, "diameter": 0.8, "count": 7, "status": "none", "notes": ""}, {"id": 1160, "date": "2025-09-19", "state": "Nebraska", "location": "Highway median", "height": 6.8, "diameter": 1.0, "count": 10, "status": "none", "notes": ""}, {"id": 1161, "date": "2026-09-19", "state": "Nebraska", "location": "Highway median", "height": 8.4, "diameter": 1.2, "count": 12, "status": "none", "notes": ""}, {"id": 1162, "date": "2021-09-19", "state": "Nevada", "location": "Community park edge", "height": 0.9, "diameter": 0.1, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1163, "date": "2022-09-19", "state": "Nevada", "location": "Community park edge", "height": 1.6, "diameter": 0.2, "count": 2, "status": "none", "notes": ""}, {"id": 1164, "date": "2023-09-19", "state": "Nevada", "location": "Community park edge", "height": 2.2, "diameter": 0.3, "count": 3, "status": "none", "notes": ""}, {"id": 1165, "date": "2024-09-19", "state": "Nevada", "location": "Community park edge", "height": 2.6, "diameter": 0.4, "count": 4, "status": "none", "notes": ""}, {"id": 1166, "date": "2025-09-19", "state": "Nevada", "location": "Community park edge", "height": 3.5, "diameter": 0.5, "count": 5, "status": "none", "notes": ""}, {"id": 1167, "date": "2026-09-19", "state": "Nevada", "location": "Community park edge", "height": 4.2, "diameter": 0.5, "count": 5, "status": "none", "notes": ""}, {"id": 1168, "date": "2021-09-19", "state": "New Hampshire", "location": "Industrial lot fence line", "height": 2.1, "diameter": 0.3, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1169, "date": "2022-09-19", "state": "New Hampshire", "location": "Industrial lot fence line", "height": 3.7, "diameter": 0.5, "count": 1, "status": "none", "notes": ""}, {"id": 1170, "date": "2023-09-19", "state": "New Hampshire", "location": "Industrial lot fence line", "height": 4.9, "diameter": 0.7, "count": 2, "status": "none", "notes": ""}, {"id": 1171, "date": "2024-09-19", "state": "New Hampshire", "location": "Industrial lot fence line", "height": 6.3, "diameter": 1.0, "count": 5, "status": "none", "notes": ""}, {"id": 1172, "date": "2025-09-19", "state": "New Hampshire", "location": "Industrial lot fence line", "height": 7.4, "diameter": 1.0, "count": 7, "status": "none", "notes": ""}, {"id": 1173, "date": "2026-09-19", "state": "New Hampshire", "location": "Industrial lot fence line", "height": 8.7, "diameter": 1.2, "count": 9, "status": "none", "notes": ""}, {"id": 1174, "date": "2021-09-19", "state": "New Jersey", "location": "Forest edge clearing", "height": 2.9, "diameter": 0.5, "count": 7, "status": "none", "notes": "Sample data"}, {"id": 1175, "date": "2022-09-19", "state": "New Jersey", "location": "Forest edge clearing", "height": 4.7, "diameter": 0.6, "count": 12, "status": "none", "notes": ""}, {"id": 1176, "date": "2023-09-19", "state": "New Jersey", "location": "Forest edge clearing", "height": 7.1, "diameter": 1.1, "count": 18, "status": "none", "notes": ""}, {"id": 1177, "date": "2024-09-19", "state": "New Jersey", "location": "Forest edge clearing", "height": 10.1, "diameter": 1.4, "count": 21, "status": "none", "notes": ""}, {"id": 1178, "date": "2025-09-19", "state": "New Jersey", "location": "Forest edge clearing", "height": 12.1, "diameter": 1.5, "count": 25, "status": "none", "notes": ""}, {"id": 1179, "date": "2026-09-19", "state": "New Jersey", "location": "Forest edge clearing", "height": 14.4, "diameter": 1.8, "count": 29, "status": "none", "notes": ""}, {"id": 1180, "date": "2021-09-19", "state": "New Mexico", "location": "Trailhead parking area", "height": 1.5, "diameter": 0.2, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1181, "date": "2022-09-19", "state": "New Mexico", "location": "Trailhead parking area", "height": 1.8, "diameter": 0.3, "count": 1, "status": "none", "notes": ""}, {"id": 1182, "date": "2023-09-19", "state": "New Mexico", "location": "Trailhead parking area", "height": 2.4, "diameter": 0.4, "count": 1, "status": "none", "notes": ""}, {"id": 1183, "date": "2024-09-19", "state": "New Mexico", "location": "Trailhead parking area", "height": 2.9, "diameter": 0.4, "count": 2, "status": "none", "notes": ""}, {"id": 1184, "date": "2025-09-19", "state": "New Mexico", "location": "Trailhead parking area", "height": 3.2, "diameter": 0.4, "count": 3, "status": "none", "notes": ""}, {"id": 1185, "date": "2026-09-19", "state": "New Mexico", "location": "Trailhead parking area", "height": 3.9, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1186, "date": "2021-09-19", "state": "New York", "location": "Roadside embankment", "height": 2.3, "diameter": 0.3, "count": 3, "status": "none", "notes": "Sample data"}, {"id": 1187, "date": "2022-09-19", "state": "New York", "location": "Roadside embankment", "height": 4.7, "diameter": 0.6, "count": 9, "status": "none", "notes": ""}, {"id": 1188, "date": "2023-09-19", "state": "New York", "location": "Roadside embankment", "height": 7.0, "diameter": 1.2, "count": 14, "status": "none", "notes": ""}, {"id": 1189, "date": "2024-09-19", "state": "New York", "location": "Roadside embankment", "height": 8.9, "diameter": 1.6, "count": 20, "status": "none", "notes": ""}, {"id": 1190, "date": "2025-09-19", "state": "New York", "location": "Roadside embankment", "height": 10.9, "diameter": 1.3, "count": 26, "status": "none", "notes": ""}, {"id": 1191, "date": "2026-09-19", "state": "New York", "location": "Roadside embankment", "height": 13.8, "diameter": 2.4, "count": 28, "status": "none", "notes": ""}, {"id": 1192, "date": "2021-09-19", "state": "North Carolina", "location": "Old rail corridor", "height": 2.8, "diameter": 0.4, "count": 2, "status": "none", "notes": "Sample data"}, {"id": 1193, "date": "2022-09-19", "state": "North Carolina", "location": "Old rail corridor", "height": 4.9, "diameter": 0.7, "count": 8, "status": "none", "notes": ""}, {"id": 1194, "date": "2023-09-19", "state": "North Carolina", "location": "Old rail corridor", "height": 6.4, "diameter": 1.0, "count": 12, "status": "none", "notes": ""}, {"id": 1195, "date": "2024-09-19", "state": "North Carolina", "location": "Old rail corridor", "height": 9.0, "diameter": 1.1, "count": 17, "status": "monitoring", "notes": ""}, {"id": 1196, "date": "2025-09-19", "state": "North Carolina", "location": "Old rail corridor", "height": 10.4, "diameter": 1.7, "count": 16, "status": "monitoring", "notes": ""}, {"id": 1197, "date": "2026-09-19", "state": "North Carolina", "location": "Old rail corridor", "height": 11.6, "diameter": 2.0, "count": 18, "status": "cleared", "notes": ""}, {"id": 1198, "date": "2021-09-19", "state": "North Dakota", "location": "Farm field border", "height": 0.8, "diameter": 0.1, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1199, "date": "2022-09-19", "state": "North Dakota", "location": "Farm field border", "height": 1.1, "diameter": 0.2, "count": 0, "status": "none", "notes": ""}, {"id": 1200, "date": "2023-09-19", "state": "North Dakota", "location": "Farm field border", "height": 1.8, "diameter": 0.3, "count": 1, "status": "none", "notes": ""}, {"id": 1201, "date": "2024-09-19", "state": "North Dakota", "location": "Farm field border", "height": 2.4, "diameter": 0.4, "count": 2, "status": "none", "notes": ""}, {"id": 1202, "date": "2025-09-19", "state": "North Dakota", "location": "Farm field border", "height": 3.4, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1203, "date": "2026-09-19", "state": "North Dakota", "location": "Farm field border", "height": 4.1, "diameter": 0.7, "count": 4, "status": "none", "notes": ""}, {"id": 1204, "date": "2021-09-19", "state": "Ohio", "location": "Forest edge clearing", "height": 2.3, "diameter": 0.3, "count": 7, "status": "none", "notes": "Sample data"}, {"id": 1205, "date": "2022-09-19", "state": "Ohio", "location": "Forest edge clearing", "height": 4.9, "diameter": 0.8, "count": 11, "status": "none", "notes": ""}, {"id": 1206, "date": "2023-09-19", "state": "Ohio", "location": "Forest edge clearing", "height": 7.5, "diameter": 1.1, "count": 14, "status": "none", "notes": ""}, {"id": 1207, "date": "2024-09-19", "state": "Ohio", "location": "Forest edge clearing", "height": 10.0, "diameter": 1.3, "count": 18, "status": "none", "notes": ""}, {"id": 1208, "date": "2025-09-19", "state": "Ohio", "location": "Forest edge clearing", "height": 12.4, "diameter": 2.2, "count": 23, "status": "none", "notes": ""}, {"id": 1209, "date": "2026-09-19", "state": "Ohio", "location": "Forest edge clearing", "height": 14.6, "diameter": 2.0, "count": 28, "status": "none", "notes": ""}, {"id": 1210, "date": "2021-09-19", "state": "Oklahoma", "location": "Riverbank trail", "height": 1.7, "diameter": 0.2, "count": 3, "status": "none", "notes": "Sample data"}, {"id": 1211, "date": "2022-09-19", "state": "Oklahoma", "location": "Riverbank trail", "height": 3.3, "diameter": 0.5, "count": 3, "status": "none", "notes": ""}, {"id": 1212, "date": "2023-09-19", "state": "Oklahoma", "location": "Riverbank trail", "height": 4.4, "diameter": 0.6, "count": 5, "status": "none", "notes": ""}, {"id": 1213, "date": "2024-09-19", "state": "Oklahoma", "location": "Riverbank trail", "height": 6.0, "diameter": 1.0, "count": 5, "status": "none", "notes": ""}, {"id": 1214, "date": "2025-09-19", "state": "Oklahoma", "location": "Riverbank trail", "height": 7.3, "diameter": 0.9, "count": 8, "status": "none", "notes": ""}, {"id": 1215, "date": "2026-09-19", "state": "Oklahoma", "location": "Riverbank trail", "height": 8.6, "diameter": 1.4, "count": 11, "status": "none", "notes": ""}, {"id": 1216, "date": "2021-09-19", "state": "Oregon", "location": "Riverbank trail", "height": 1.5, "diameter": 0.2, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1217, "date": "2022-09-19", "state": "Oregon", "location": "Riverbank trail", "height": 2.4, "diameter": 0.4, "count": 2, "status": "none", "notes": ""}, {"id": 1218, "date": "2023-09-19", "state": "Oregon", "location": "Riverbank trail", "height": 3.5, "diameter": 0.5, "count": 2, "status": "none", "notes": ""}, {"id": 1219, "date": "2024-09-19", "state": "Oregon", "location": "Riverbank trail", "height": 4.4, "diameter": 0.6, "count": 2, "status": "none", "notes": ""}, {"id": 1220, "date": "2025-09-19", "state": "Oregon", "location": "Riverbank trail", "height": 5.3, "diameter": 0.8, "count": 3, "status": "none", "notes": ""}, {"id": 1221, "date": "2026-09-19", "state": "Oregon", "location": "Riverbank trail", "height": 6.8, "diameter": 1.0, "count": 5, "status": "none", "notes": ""}, {"id": 1222, "date": "2021-09-19", "state": "Pennsylvania", "location": "Old rail corridor", "height": 2.7, "diameter": 0.5, "count": 6, "status": "none", "notes": "Sample data"}, {"id": 1223, "date": "2022-09-19", "state": "Pennsylvania", "location": "Old rail corridor", "height": 4.6, "diameter": 0.6, "count": 11, "status": "none", "notes": ""}, {"id": 1224, "date": "2023-09-19", "state": "Pennsylvania", "location": "Old rail corridor", "height": 7.3, "diameter": 1.2, "count": 15, "status": "none", "notes": ""}, {"id": 1225, "date": "2024-09-19", "state": "Pennsylvania", "location": "Old rail corridor", "height": 9.2, "diameter": 1.6, "count": 19, "status": "monitoring", "notes": ""}, {"id": 1226, "date": "2025-09-19", "state": "Pennsylvania", "location": "Old rail corridor", "height": 10.7, "diameter": 1.6, "count": 21, "status": "monitoring", "notes": ""}, {"id": 1227, "date": "2026-09-19", "state": "Pennsylvania", "location": "Old rail corridor", "height": 11.8, "diameter": 1.8, "count": 20, "status": "cleared", "notes": ""}, {"id": 1228, "date": "2021-09-19", "state": "Rhode Island", "location": "Riverbank trail", "height": 2.1, "diameter": 0.4, "count": 3, "status": "none", "notes": "Sample data"}, {"id": 1229, "date": "2022-09-19", "state": "Rhode Island", "location": "Riverbank trail", "height": 3.1, "diameter": 0.4, "count": 6, "status": "none", "notes": ""}, {"id": 1230, "date": "2023-09-19", "state": "Rhode Island", "location": "Riverbank trail", "height": 4.7, "diameter": 0.7, "count": 6, "status": "none", "notes": ""}, {"id": 1231, "date": "2024-09-19", "state": "Rhode Island", "location": "Riverbank trail", "height": 6.0, "diameter": 0.9, "count": 9, "status": "none", "notes": ""}, {"id": 1232, "date": "2025-09-19", "state": "Rhode Island", "location": "Riverbank trail", "height": 7.5, "diameter": 1.1, "count": 10, "status": "none", "notes": ""}, {"id": 1233, "date": "2026-09-19", "state": "Rhode Island", "location": "Riverbank trail", "height": 8.3, "diameter": 1.4, "count": 12, "status": "none", "notes": ""}, {"id": 1234, "date": "2021-09-19", "state": "South Carolina", "location": "Highway median", "height": 1.2, "diameter": 0.2, "count": 3, "status": "none", "notes": "Sample data"}, {"id": 1235, "date": "2022-09-19", "state": "South Carolina", "location": "Highway median", "height": 2.7, "diameter": 0.3, "count": 4, "status": "none", "notes": ""}, {"id": 1236, "date": "2023-09-19", "state": "South Carolina", "location": "Highway median", "height": 4.3, "diameter": 0.6, "count": 6, "status": "none", "notes": ""}, {"id": 1237, "date": "2024-09-19", "state": "South Carolina", "location": "Highway median", "height": 5.8, "diameter": 1.0, "count": 6, "status": "none", "notes": ""}, {"id": 1238, "date": "2025-09-19", "state": "South Carolina", "location": "Highway median", "height": 7.5, "diameter": 1.3, "count": 9, "status": "none", "notes": ""}, {"id": 1239, "date": "2026-09-19", "state": "South Carolina", "location": "Highway median", "height": 8.9, "diameter": 1.5, "count": 12, "status": "none", "notes": ""}, {"id": 1240, "date": "2021-09-19", "state": "South Dakota", "location": "Park boundary", "height": 1.5, "diameter": 0.2, "count": 2, "status": "none", "notes": "Sample data"}, {"id": 1241, "date": "2022-09-19", "state": "South Dakota", "location": "Park boundary", "height": 2.4, "diameter": 0.4, "count": 2, "status": "none", "notes": ""}, {"id": 1242, "date": "2023-09-19", "state": "South Dakota", "location": "Park boundary", "height": 3.9, "diameter": 0.5, "count": 2, "status": "none", "notes": ""}, {"id": 1243, "date": "2024-09-19", "state": "South Dakota", "location": "Park boundary", "height": 5.5, "diameter": 0.8, "count": 4, "status": "none", "notes": ""}, {"id": 1244, "date": "2025-09-19", "state": "South Dakota", "location": "Park boundary", "height": 6.7, "diameter": 1.0, "count": 5, "status": "none", "notes": ""}, {"id": 1245, "date": "2026-09-19", "state": "South Dakota", "location": "Park boundary", "height": 8.1, "diameter": 1.1, "count": 6, "status": "none", "notes": ""}, {"id": 1246, "date": "2021-09-19", "state": "Tennessee", "location": "Utility right-of-way", "height": 3.9, "diameter": 0.5, "count": 3, "status": "none", "notes": "Sample data"}, {"id": 1247, "date": "2022-09-19", "state": "Tennessee", "location": "Utility right-of-way", "height": 6.1, "diameter": 0.9, "count": 7, "status": "none", "notes": ""}, {"id": 1248, "date": "2023-09-19", "state": "Tennessee", "location": "Utility right-of-way", "height": 8.6, "diameter": 1.5, "count": 12, "status": "none", "notes": ""}, {"id": 1249, "date": "2024-09-19", "state": "Tennessee", "location": "Utility right-of-way", "height": 11.1, "diameter": 1.4, "count": 15, "status": "none", "notes": ""}, {"id": 1250, "date": "2025-09-19", "state": "Tennessee", "location": "Utility right-of-way", "height": 14.0, "diameter": 1.9, "count": 21, "status": "none", "notes": ""}, {"id": 1251, "date": "2026-09-19", "state": "Tennessee", "location": "Utility right-of-way", "height": 16.9, "diameter": 2.5, "count": 25, "status": "none", "notes": ""}, {"id": 1252, "date": "2021-09-19", "state": "Texas", "location": "Park boundary", "height": 2.7, "diameter": 0.4, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1253, "date": "2022-09-19", "state": "Texas", "location": "Park boundary", "height": 3.8, "diameter": 0.5, "count": 2, "status": "none", "notes": ""}, {"id": 1254, "date": "2023-09-19", "state": "Texas", "location": "Park boundary", "height": 5.4, "diameter": 0.7, "count": 5, "status": "none", "notes": ""}, {"id": 1255, "date": "2024-09-19", "state": "Texas", "location": "Park boundary", "height": 6.8, "diameter": 1.2, "count": 5, "status": "none", "notes": ""}, {"id": 1256, "date": "2025-09-19", "state": "Texas", "location": "Park boundary", "height": 8.3, "diameter": 1.4, "count": 7, "status": "none", "notes": ""}, {"id": 1257, "date": "2026-09-19", "state": "Texas", "location": "Park boundary", "height": 9.3, "diameter": 1.2, "count": 9, "status": "none", "notes": ""}, {"id": 1258, "date": "2021-09-19", "state": "Utah", "location": "Highway median", "height": 2.4, "diameter": 0.4, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1259, "date": "2022-09-19", "state": "Utah", "location": "Highway median", "height": 3.5, "diameter": 0.4, "count": 4, "status": "none", "notes": ""}, {"id": 1260, "date": "2023-09-19", "state": "Utah", "location": "Highway median", "height": 4.7, "diameter": 0.6, "count": 5, "status": "none", "notes": ""}, {"id": 1261, "date": "2024-09-19", "state": "Utah", "location": "Highway median", "height": 5.8, "diameter": 0.8, "count": 8, "status": "none", "notes": ""}, {"id": 1262, "date": "2025-09-19", "state": "Utah", "location": "Highway median", "height": 6.7, "diameter": 1.0, "count": 10, "status": "none", "notes": ""}, {"id": 1263, "date": "2026-09-19", "state": "Utah", "location": "Highway median", "height": 8.4, "diameter": 1.1, "count": 11, "status": "none", "notes": ""}, {"id": 1264, "date": "2021-09-19", "state": "Vermont", "location": "Riverbank trail", "height": 2.9, "diameter": 0.4, "count": 2, "status": "none", "notes": "Sample data"}, {"id": 1265, "date": "2022-09-19", "state": "Vermont", "location": "Riverbank trail", "height": 3.8, "diameter": 0.7, "count": 3, "status": "none", "notes": ""}, {"id": 1266, "date": "2023-09-19", "state": "Vermont", "location": "Riverbank trail", "height": 5.3, "diameter": 0.9, "count": 6, "status": "none", "notes": ""}, {"id": 1267, "date": "2024-09-19", "state": "Vermont", "location": "Riverbank trail", "height": 6.9, "diameter": 0.9, "count": 8, "status": "none", "notes": ""}, {"id": 1268, "date": "2025-09-19", "state": "Vermont", "location": "Riverbank trail", "height": 8.1, "diameter": 1.2, "count": 10, "status": "none", "notes": ""}, {"id": 1269, "date": "2026-09-19", "state": "Vermont", "location": "Riverbank trail", "height": 9.4, "diameter": 1.5, "count": 12, "status": "none", "notes": ""}, {"id": 1270, "date": "2021-09-19", "state": "Virginia", "location": "Utility right-of-way", "height": 2.3, "diameter": 0.4, "count": 3, "status": "none", "notes": "Sample data"}, {"id": 1271, "date": "2022-09-19", "state": "Virginia", "location": "Utility right-of-way", "height": 4.1, "diameter": 0.6, "count": 5, "status": "none", "notes": ""}, {"id": 1272, "date": "2023-09-19", "state": "Virginia", "location": "Utility right-of-way", "height": 6.3, "diameter": 1.0, "count": 9, "status": "none", "notes": ""}, {"id": 1273, "date": "2024-09-19", "state": "Virginia", "location": "Utility right-of-way", "height": 8.0, "diameter": 1.4, "count": 11, "status": "none", "notes": ""}, {"id": 1274, "date": "2025-09-19", "state": "Virginia", "location": "Utility right-of-way", "height": 10.0, "diameter": 1.3, "count": 16, "status": "monitoring", "notes": ""}, {"id": 1275, "date": "2026-09-19", "state": "Virginia", "location": "Utility right-of-way", "height": 11.4, "diameter": 1.5, "count": 15, "status": "monitoring", "notes": ""}, {"id": 1276, "date": "2021-09-19", "state": "Washington", "location": "Industrial lot fence line", "height": 2.9, "diameter": 0.5, "count": 4, "status": "none", "notes": "Sample data"}, {"id": 1277, "date": "2022-09-19", "state": "Washington", "location": "Industrial lot fence line", "height": 4.6, "diameter": 0.8, "count": 4, "status": "none", "notes": ""}, {"id": 1278, "date": "2023-09-19", "state": "Washington", "location": "Industrial lot fence line", "height": 6.0, "diameter": 0.7, "count": 6, "status": "none", "notes": ""}, {"id": 1279, "date": "2024-09-19", "state": "Washington", "location": "Industrial lot fence line", "height": 7.2, "diameter": 1.1, "count": 9, "status": "none", "notes": ""}, {"id": 1280, "date": "2025-09-19", "state": "Washington", "location": "Industrial lot fence line", "height": 8.2, "diameter": 1.0, "count": 11, "status": "none", "notes": ""}, {"id": 1281, "date": "2026-09-19", "state": "Washington", "location": "Industrial lot fence line", "height": 9.7, "diameter": 1.2, "count": 13, "status": "none", "notes": ""}, {"id": 1282, "date": "2021-09-19", "state": "West Virginia", "location": "Utility right-of-way", "height": 4.8, "diameter": 0.8, "count": 8, "status": "none", "notes": "Sample data"}, {"id": 1283, "date": "2022-09-19", "state": "West Virginia", "location": "Utility right-of-way", "height": 7.2, "diameter": 0.9, "count": 10, "status": "none", "notes": ""}, {"id": 1284, "date": "2023-09-19", "state": "West Virginia", "location": "Utility right-of-way", "height": 9.2, "diameter": 1.5, "count": 13, "status": "none", "notes": ""}, {"id": 1285, "date": "2024-09-19", "state": "West Virginia", "location": "Utility right-of-way", "height": 11.0, "diameter": 1.5, "count": 19, "status": "monitoring", "notes": ""}, {"id": 1286, "date": "2025-09-19", "state": "West Virginia", "location": "Utility right-of-way", "height": 12.4, "diameter": 1.7, "count": 18, "status": "monitoring", "notes": ""}, {"id": 1287, "date": "2026-09-19", "state": "West Virginia", "location": "Utility right-of-way", "height": 13.7, "diameter": 2.1, "count": 17, "status": "cleared", "notes": ""}, {"id": 1288, "date": "2021-09-19", "state": "Wisconsin", "location": "Abandoned field", "height": 1.3, "diameter": 0.2, "count": 1, "status": "none", "notes": "Sample data"}, {"id": 1289, "date": "2022-09-19", "state": "Wisconsin", "location": "Abandoned field", "height": 2.8, "diameter": 0.4, "count": 1, "status": "none", "notes": ""}, {"id": 1290, "date": "2023-09-19", "state": "Wisconsin", "location": "Abandoned field", "height": 4.0, "diameter": 0.6, "count": 2, "status": "none", "notes": ""}, {"id": 1291, "date": "2024-09-19", "state": "Wisconsin", "location": "Abandoned field", "height": 4.8, "diameter": 0.6, "count": 4, "status": "none", "notes": ""}, {"id": 1292, "date": "2025-09-19", "state": "Wisconsin", "location": "Abandoned field", "height": 6.3, "diameter": 1.0, "count": 4, "status": "none", "notes": ""}, {"id": 1293, "date": "2026-09-19", "state": "Wisconsin", "location": "Abandoned field", "height": 7.6, "diameter": 1.1, "count": 6, "status": "none", "notes": ""}, {"id": 1294, "date": "2021-09-19", "state": "Wyoming", "location": "Reservoir access road", "height": 1.9, "diameter": 0.3, "count": 0, "status": "none", "notes": "Sample data"}, {"id": 1295, "date": "2022-09-19", "state": "Wyoming", "location": "Reservoir access road", "height": 2.7, "diameter": 0.3, "count": 0, "status": "none", "notes": ""}, {"id": 1296, "date": "2023-09-19", "state": "Wyoming", "location": "Reservoir access road", "height": 3.3, "diameter": 0.5, "count": 1, "status": "none", "notes": ""}, {"id": 1297, "date": "2024-09-19", "state": "Wyoming", "location": "Reservoir access road", "height": 3.7, "diameter": 0.5, "count": 2, "status": "none", "notes": ""}, {"id": 1298, "date": "2025-09-19", "state": "Wyoming", "location": "Reservoir access road", "height": 4.1, "diameter": 0.5, "count": 2, "status": "none", "notes": ""}, {"id": 1299, "date": "2026-09-19", "state": "Wyoming", "location": "Reservoir access road", "height": 4.6, "diameter": 0.7, "count": 3, "status": "none", "notes": ""}];
+
+function loadSampleData() {
+  const existing = loadEntries();
+  if (existing.length > 0) {
+    const ok = confirm('This will ADD sample data alongside your existing ' + existing.length + ' entries. Continue?');
+    if (!ok) return;
+  }
+  const merged = existing.concat(SAMPLE_DATA);
+  saveEntries(merged);
+  render();
+  showToast('Sample data loaded (250 entries) 🧪');
+}
+
+function clearAllData() {
+  const ok = confirm('This will permanently delete ALL entries (sample and your own). Are you sure?');
+  if (!ok) return;
+  saveEntries([]);
+  render();
+  showToast('All data cleared');
+}
+
+function loadEntries() {
+  try {
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      // migrate old single-state entries if present
+      const old = localStorage.getItem(OLD_STORAGE_KEY);
+      if (old) {
+        const oldEntries = JSON.parse(old).map(e => ({ ...e, state: e.state || '', status: 'none' }));
+        saveEntries(oldEntries);
+        return oldEntries;
+      }
+      return [];
+    }
+    return JSON.parse(raw);
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveEntries(entries) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  } catch (e) {
+    console.error('Could not save', e);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+let pendingCoords = null; // { lat, lon } captured via "Use My Current Location", attached to the next saved entry
+
+function addEntry() {
+  const date = document.getElementById('f-date').value;
+  const state = document.getElementById('f-state').value;
+  const location = document.getElementById('f-location').value.trim();
+  const height = parseFloat(document.getElementById('f-height').value);
+  const diameter = parseFloat(document.getElementById('f-diameter').value);
+  const count = parseInt(document.getElementById('f-count').value);
+  const status = document.getElementById('f-status').value;
+  const notes = document.getElementById('f-notes').value.trim();
+
+  if (!date || !state || !location) {
+    showToast('Add a date, state, and location first!');
+    return;
+  }
+
+  const entries = loadEntries();
+  entries.push({
+    id: Date.now(),
+    date, state, location,
+    height: isNaN(height) ? null : height,
+    diameter: isNaN(diameter) ? null : diameter,
+    count: isNaN(count) ? null : count,
+    status,
+    notes,
+    lat: pendingCoords ? pendingCoords.lat : null,
+    lon: pendingCoords ? pendingCoords.lon : null
+  });
+  entries.sort((a, b) => a.date.localeCompare(b.date));
+  saveEntries(entries);
+
+  document.getElementById('f-location').value = '';
+  document.getElementById('f-height').value = '';
+  document.getElementById('f-diameter').value = '';
+  document.getElementById('f-count').value = '';
+  document.getElementById('f-notes').value = '';
+  document.getElementById('f-status').value = 'none';
+  document.getElementById('f-location-status').textContent = '';
+  pendingCoords = null;
+
+  render();
+  showToast('Entry saved! 🌱');
+}
+
+function haversineMiles(lat1, lon1, lat2, lon2) {
+  const toRad = d => d * Math.PI / 180;
+  const R = 3958.8; // miles
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.asin(Math.sqrt(a));
+}
+
+async function reverseGeocode(lat, lon) {
+  const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10`, {
+    headers: { 'Accept': 'application/json' }
+  });
+  if (!res.ok) throw new Error('Reverse geocoding failed');
+  const data = await res.json();
+  const addr = data.address || {};
+  return { state: addr.state || null, display: data.display_name || null };
+}
+
+function getCurrentPosition() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error('Geolocation is not supported on this device/browser.'));
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      pos => resolve(pos.coords),
+      err => reject(err),
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  });
+}
+
+async function useMyLocationForEntry() {
+  const statusEl = document.getElementById('f-location-status');
+  statusEl.textContent = 'Getting your location…';
+  try {
+    const coords = await getCurrentPosition();
+    pendingCoords = { lat: coords.latitude, lon: coords.longitude };
+    statusEl.textContent = 'Looking up your state…';
+    try {
+      const geo = await reverseGeocode(coords.latitude, coords.longitude);
+      if (geo.state && STATES.includes(geo.state)) {
+        document.getElementById('f-state').value = geo.state;
+      }
+      statusEl.textContent = `📍 Location captured (${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)})${geo.state ? ' — ' + geo.state : ''}`;
+    } catch (e) {
+      statusEl.textContent = `📍 Location captured (${coords.latitude.toFixed(3)}, ${coords.longitude.toFixed(3)}) — couldn't look up state, please select it manually.`;
+    }
+  } catch (err) {
+    statusEl.textContent = 'Could not get your location — check location permissions, or just fill in the state and location manually.';
+  }
+}
+
+async function checkNearMe() {
+  const resultEl = document.getElementById('nearme-result');
+  resultEl.innerHTML = '<div class="empty">Getting your location…</div>';
+  let coords;
+  try {
+    coords = await getCurrentPosition();
+  } catch (err) {
+    resultEl.innerHTML = '<div class="empty">Could not get your location — check that location access is allowed for this page.</div>';
+    return;
+  }
+
+  const entries = loadEntries();
+  const withCoords = entries.filter(e => e.lat != null && e.lon != null);
+  const NEARBY_MILES = 30;
+
+  const nearby = withCoords
+    .map(e => ({ ...e, distance: haversineMiles(coords.latitude, coords.longitude, e.lat, e.lon) }))
+    .filter(e => e.distance <= NEARBY_MILES)
+    .sort((a, b) => a.distance - b.distance);
+
+  if (nearby.length > 0) {
+    const totalTrees = nearby.reduce((sum, e) => sum + (e.count || 0), 0);
+    resultEl.innerHTML = `
+      <div class="why" style="margin-bottom:8px;"><b>Yes — ${nearby.length} logged entr${nearby.length === 1 ? 'y' : 'ies'} within ${NEARBY_MILES} miles</b> (about ${Math.round(totalTrees)} trees total).</div>
+      ${nearby.slice(0, 5).map(e => `
+        <div class="entry">
+          <div class="info">
+            <div class="date">${e.date} <span class="state-tag">${escapeHtml(e.state)}</span> ${statusLabel(e.status)}</div>
+            <div>${escapeHtml(e.location)} — ${e.distance.toFixed(1)} mi away</div>
+            <div>Height: ${e.height != null ? e.height + ' ft' : '—'} · Count: ${e.count != null ? e.count : '—'}</div>
+          </div>
+        </div>
+      `).join('')}
+    `;
+    return;
+  }
+
+  // fall back to state-level match using reverse geocoding
+  try {
+    const geo = await reverseGeocode(coords.latitude, coords.longitude);
+    if (geo.state) {
+      const stateEntries = entries.filter(e => e.state === geo.state);
+      if (stateEntries.length > 0) {
+        const totalTrees = stateEntries.reduce((sum, e) => sum + (e.count || 0), 0);
+        resultEl.innerHTML = `<div class="why"><b>No entries within ${NEARBY_MILES} miles</b>, but <b>${geo.state}</b> has ${stateEntries.length} logged entries elsewhere in the state (~${Math.round(totalTrees)} trees total). Consider logging one closer to you!</div>`;
+      } else {
+        resultEl.innerHTML = `<div class="why">No Tree of Heaven logged near you or anywhere in <b>${geo.state}</b> yet. Be the first to log one in your area!</div>`;
+      }
+      return;
+    }
+  } catch (e) {
+    // reverse geocoding failed — fall through to generic message
+  }
+
+  resultEl.innerHTML = `<div class="why">No Tree of Heaven logged within ${NEARBY_MILES} miles of you yet. New entries you add with "Use My Current Location" will show up here.</div>`;
+}
+
+function deleteEntry(id) {
+  let entries = loadEntries();
+  entries = entries.filter(e => e.id !== id);
+  saveEntries(entries);
+  render();
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str || '';
+  return div.innerHTML;
+}
+
+function statusLabel(status) {
+  if (status === 'monitoring') return '<span class="status-pill status-monitoring">Monitoring</span>';
+  if (status === 'cleared') return '<span class="status-pill status-cleared">Cleared</span>';
+  return '<span class="status-pill status-none">Not treated</span>';
+}
+
+let historyExpanded = false;
+
+function toggleHistory() {
+  historyExpanded = !historyExpanded;
+  document.getElementById('history-body').style.display = historyExpanded ? 'block' : 'none';
+  document.getElementById('history-toggle-icon').textContent = historyExpanded ? '▾' : '▸';
+  if (historyExpanded) renderHistory(loadEntries());
+}
+
+function renderHistory(entries) {
+  const countEl = document.getElementById('history-count');
+  countEl.textContent = `(${entries.length})`;
+
+  if (!historyExpanded) return; // skip building the list while collapsed
+
+  const container = document.getElementById('history');
+  const searchEl = document.getElementById('history-search');
+  const query = (searchEl ? searchEl.value : '').trim().toLowerCase();
+
+  let filtered = entries;
+  if (query) {
+    filtered = entries.filter(e =>
+      (e.state || '').toLowerCase().includes(query) ||
+      (e.location || '').toLowerCase().includes(query) ||
+      (e.notes || '').toLowerCase().includes(query)
+    );
+  }
+
+  if (entries.length === 0) {
+    container.innerHTML = '<div class="empty">No entries yet — add your first sighting above!</div>';
+    return;
+  }
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty">No entries match your search.</div>';
+    return;
+  }
+
+  const sorted = [...filtered].sort((a, b) => b.date.localeCompare(a.date));
+  container.innerHTML = sorted.map(e => `
+    <div class="entry">
+      <div class="info">
+        <div class="date">${e.date} <span class="state-tag">${escapeHtml(e.state)}</span> ${statusLabel(e.status)}</div>
+        <div>${escapeHtml(e.location)}</div>
+        <div>Height: ${e.height != null ? e.height + ' ft' : '—'} · Trunk: ${e.diameter != null ? e.diameter + ' in' : '—'} · Count: ${e.count != null ? e.count : '—'}</div>
+        ${e.notes ? `<div class="notes">${escapeHtml(e.notes)}</div>` : ''}
+      </div>
+      <button class="del" onclick="deleteEntry(${e.id})" aria-label="Delete">✕</button>
+    </div>
+  `).join('');
+}
+
+function renderStats(entries) {
+  const container = document.getElementById('stats');
+  if (entries.length === 0) { container.innerHTML = ''; return; }
+  const statesCovered = new Set(entries.map(e => e.state).filter(Boolean)).size;
+  const cleared = entries.filter(e => e.status === 'cleared').length;
+  container.innerHTML = `
+    <div class="stat"><div class="num">${entries.length}</div><div class="lbl">Entries logged</div></div>
+    <div class="stat"><div class="num">${statesCovered}</div><div class="lbl">States covered</div></div>
+    <div class="stat"><div class="num">${cleared}</div><div class="lbl">Sites cleared</div></div>
+  `;
+}
+
+function renderStateRank(entries) {
+  const chartEl = document.getElementById('state-rank-chart');
+  const otherSel = document.getElementById('state-rank-other');
+  const otherResultEl = document.getElementById('state-rank-other-result');
+
+  if (entries.length === 0) {
+    chartEl.innerHTML = '<div class="empty">No data yet — states will rank here once you log entries.</div>';
+    otherSel.innerHTML = '<option value="">Select a state not in the top 10</option>';
+    otherResultEl.innerHTML = '';
+    return;
+  }
+
+  const byState = {};
+  entries.forEach(e => {
+    if (!e.state) return;
+    if (!byState[e.state]) byState[e.state] = { entries: 0, trees: 0 };
+    byState[e.state].entries += 1;
+    byState[e.state].trees += (e.count || 0);
+  });
+  const ranked = Object.entries(byState).sort((a, b) => b[1].trees - a[1].trees || b[1].entries - a[1].entries);
+  const top10 = ranked.slice(0, 10);
+  const rest = ranked.slice(10);
+
+  // horizontal bar chart for top 10, with the count labeled on each bar
+  const w = 620, barH = 26, gap = 10, padL = 130, padR = 60, padT = 10;
+  const h = padT + top10.length * (barH + gap);
+  const maxTrees = Math.max(...top10.map(([, d]) => d.trees), 1);
+  const plotW = w - padL - padR;
+
+  const bars = top10.map(([state, d], i) => {
+    const y = padT + i * (barH + gap);
+    const barW = Math.max(2, (d.trees / maxTrees) * plotW);
+    return `
+      <text x="${padL - 10}" y="${y + barH / 2 + 4}" font-size="12" fill="var(--text)" text-anchor="end">${escapeHtml(state)}</text>
+      <rect x="${padL}" y="${y}" width="${barW}" height="${barH}" rx="5" fill="var(--accent)"><title>${escapeHtml(state)}: ${d.trees} trees, ${d.entries} sites</title></rect>
+      <text x="${padL + barW + 8}" y="${y + barH / 2 + 4}" font-size="12" font-weight="700" fill="var(--accent-dark)">${d.trees}</text>
+    `;
+  }).join('');
+
+  chartEl.innerHTML = `
+    <svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      ${bars}
+    </svg>
+  `;
+
+  // dropdown of remaining states
+  const prevSelection = otherSel.value;
+  otherSel.innerHTML = '<option value="">Select a state not in the top 10</option>' +
+    rest.map(([state]) => `<option value="${escapeHtml(state)}">${escapeHtml(state)}</option>`).join('');
+  if (rest.some(([state]) => state === prevSelection)) {
+    otherSel.value = prevSelection;
+  }
+
+  if (otherSel.value) {
+    const d = byState[otherSel.value];
+    const rank = ranked.findIndex(([state]) => state === otherSel.value) + 1;
+    otherResultEl.innerHTML = `<div class="why"><b>${escapeHtml(otherSel.value)}</b>: ${d.trees} trees across ${d.entries} logged sites (ranked #${rank} of ${ranked.length}).</div>`;
+  } else {
+    otherResultEl.innerHTML = '';
+  }
+}
+
+function aggregateByYear(entries, stateFilter) {
+  const filtered = stateFilter ? entries.filter(e => e.state === stateFilter) : entries;
+  const byYear = {};
+  filtered.forEach(e => {
+    const year = (e.date || '').slice(0, 4);
+    if (!year) return;
+    if (!byYear[year]) byYear[year] = { heights: [], totalCount: 0, statusCount: { none: 0, monitoring: 0, cleared: 0 } };
+    if (e.height != null) byYear[year].heights.push(e.height);
+    const c = e.count || 0;
+    byYear[year].totalCount += c;
+    const st = e.status || 'none';
+    byYear[year].statusCount[st] = (byYear[year].statusCount[st] || 0) + c;
+  });
+  return Object.keys(byYear).sort().map(year => {
+    const d = byYear[year];
+    const avgHeight = d.heights.length ? (d.heights.reduce((a, b) => a + b, 0) / d.heights.length) : null;
+    return { year, avgHeight, totalCount: d.totalCount, statusCount: d.statusCount };
+  });
+}
+
+function niceStep(rough) {
+  if (rough <= 0) return 1;
+  const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+  const norm = rough / mag;
+  let step;
+  if (norm < 1.5) step = 1;
+  else if (norm < 3) step = 2;
+  else if (norm < 7) step = 5;
+  else step = 10;
+  return step * mag;
+}
+
+function lineChartSvg(data, valueKey, yLabel, unit) {
+  const w = 620, h = 240, padL = 46, padR = 20, padT = 34, padB = 34;
+  const vals = data.map(d => d[valueKey]).filter(v => v != null);
+  if (vals.length < 2) return null;
+  const minV = 0;
+  const rawMax = Math.max(...vals) * 1.2 || 1;
+  const step = niceStep(rawMax / 4);
+  const maxV = Math.ceil(rawMax / step) * step || step;
+  const pts = data.filter(d => d[valueKey] != null);
+  const plotW = w - padL - padR, plotH = h - padT - padB;
+  const xStep = plotW / (pts.length - 1 || 1);
+  const yScale = v => padT + plotH - ((v - minV) / (maxV - minV || 1)) * plotH;
+
+  // Y-axis gridlines + numeric labels
+  const gridCount = Math.round(maxV / step);
+  let gridlines = '';
+  for (let i = 0; i <= gridCount; i++) {
+    const v = i * step;
+    const y = yScale(v);
+    gridlines += `<line x1="${padL}" y1="${y}" x2="${w - padR}" y2="${y}" stroke="var(--border)" stroke-width="1" ${i === 0 ? '' : 'stroke-dasharray="3,3"'}/>`;
+    gridlines += `<text x="${padL - 8}" y="${y + 3}" font-size="10" fill="var(--muted)" text-anchor="end">${Math.round(v)}</text>`;
+  }
+
+  const points = pts.map((d, i) => `${padL + i * xStep},${yScale(d[valueKey])}`).join(' ');
+  const dots = pts.map((d, i) => {
+    const x = padL + i * xStep, y = yScale(d[valueKey]);
+    return `<circle cx="${x}" cy="${y}" r="4" fill="var(--accent-dark)"><title>${d.year}: ${d[valueKey]}${unit || ''}</title></circle>`;
+  }).join('');
+  const valueLabels = pts.map((d, i) => {
+    const x = padL + i * xStep, y = yScale(d[valueKey]);
+    const val = Number.isInteger(d[valueKey]) ? d[valueKey] : d[valueKey].toFixed(1);
+    return `<text x="${x}" y="${y - 10}" font-size="11" font-weight="700" fill="var(--accent-dark)" text-anchor="middle">${val}${unit || ''}</text>`;
+  }).join('');
+  const xLabels = pts.map((d, i) => {
+    const x = padL + i * xStep;
+    return `<text x="${x}" y="${h - 10}" font-size="10" fill="var(--muted)" text-anchor="middle">${d.year}</text>`;
+  }).join('');
+
+  return `
+    <svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      ${gridlines}
+      <polyline points="${points}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+      ${dots}
+      ${valueLabels}
+      ${xLabels}
+      <text x="${padL}" y="16" font-size="10" fill="var(--muted)">${yLabel}</text>
+    </svg>
+  `;
+}
+
+function renderHeightChart(entries) {
+  const area = document.getElementById('chart-height');
+  const filterState = document.getElementById('chart-filter').value;
+  const data = aggregateByYear(entries, filterState);
+  const svg = lineChartSvg(data, 'avgHeight', 'avg height (ft)', ' ft');
+  area.innerHTML = svg || '<div class="empty">Need at least 2 years of height data (for this filter) to chart growth.</div>';
+}
+
+function renderCountChart(entries) {
+  const area = document.getElementById('chart-count');
+  const filterState = document.getElementById('chart-filter').value;
+  const data = aggregateByYear(entries, filterState);
+  const svg = lineChartSvg(data, 'totalCount', 'total trees', '');
+  area.innerHTML = svg || '<div class="empty">Need at least 2 years of count data (for this filter) to chart totals.</div>';
+}
+
+function renderStatusChart(entries) {
+  const area = document.getElementById('chart-status');
+  const filterState = document.getElementById('chart-filter').value;
+  const data = aggregateByYear(entries, filterState);
+  if (data.length === 0 || data.every(d => (d.statusCount.none + d.statusCount.monitoring + d.statusCount.cleared) === 0)) {
+    area.innerHTML = '<div class="empty">No tree-count data yet to break down by treatment status.</div>';
+    return;
+  }
+
+  const w = 620, h = 240, pad = 40, padTop = 56;
+  const barW = Math.min(60, (w - pad * 2) / data.length - 16);
+  const gap = (w - pad * 2 - barW * data.length) / (data.length + 1);
+  const maxTotal = Math.max(...data.map(d => d.statusCount.none + d.statusCount.monitoring + d.statusCount.cleared), 1);
+  const colors = { none: '#b3452c', monitoring: '#d99a2b', cleared: '#3f7d3a' };
+
+  const bars = data.map((d, i) => {
+    const total = d.statusCount.none + d.statusCount.monitoring + d.statusCount.cleared;
+    const x = pad + gap + i * (barW + gap);
+    const scale = v => (v / maxTotal) * (h - padTop - pad);
+    let yCursor = h - pad;
+    const segs = ['none', 'monitoring', 'cleared'].map(key => {
+      const val = Math.round(d.statusCount[key]);
+      const segH = scale(val);
+      const segY = yCursor - segH;
+      // only print the number inside the segment if there's room for it, otherwise skip
+      const numLabel = (val > 0 && segH >= 12)
+        ? `<text x="${x + barW / 2}" y="${segY + segH / 2 + 4}" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">${val}</text>`
+        : '';
+      const rect = `<rect x="${x}" y="${segY}" width="${barW}" height="${segH}" fill="${colors[key]}"><title>${d.year} ${key}: ${val}</title></rect>`;
+      yCursor = segY;
+      return rect + numLabel;
+    }).join('');
+    const totalLabel = `<text x="${x + barW / 2}" y="${yCursor - 6}" font-size="11" font-weight="700" fill="var(--accent-dark)" text-anchor="middle">${Math.round(total)}</text>`;
+    const yearLabel = `<text x="${x + barW/2}" y="${h - pad + 16}" font-size="10" fill="var(--muted)" text-anchor="middle">${d.year}</text>`;
+    return segs + totalLabel + yearLabel;
+  }).join('');
+
+  area.innerHTML = `
+    <svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      <line x1="${pad}" y1="${h - pad}" x2="${w - pad}" y2="${h - pad}" stroke="var(--border)" stroke-width="1"/>
+      ${bars}
+    </svg>
+    <div style="display:flex; gap:14px; justify-content:center; margin-top:8px; font-size:12px; color:var(--muted);">
+      <span><span style="display:inline-block;width:10px;height:10px;background:${colors.none};border-radius:2px;margin-right:4px;"></span>Not treated</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:${colors.monitoring};border-radius:2px;margin-right:4px;"></span>Monitoring</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:${colors.cleared};border-radius:2px;margin-right:4px;"></span>Cleared</span>
+    </div>
+  `;
+}
+
+function getLatestSnapshotByState(entries) {
+  const latest = {};
+  entries.forEach(e => {
+    if (!e.state || e.count == null) return;
+    if (!latest[e.state] || e.date > latest[e.state].date) {
+      latest[e.state] = { date: e.date, count: e.count };
+    }
+  });
+  return latest;
+}
+
+function runForecast() {
+  const entries = loadEntries();
+  const snapshot = getLatestSnapshotByState(entries);
+  const ranked = Object.entries(snapshot)
+    .map(([state, d]) => ({ state, count: d.count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+  const summaryEl = document.getElementById('forecast-summary');
+  const chartEl = document.getElementById('forecast-chart');
+
+  if (ranked.length === 0) {
+    summaryEl.innerHTML = "<div class=\"empty\">Log or load some data first so there's a baseline to forecast from.</div>";
+    chartEl.innerHTML = '';
+    return;
+  }
+
+  const drones = Math.max(1, parseInt(document.getElementById('fc-drones').value) || 1);
+  const rate = Math.max(1, parseInt(document.getElementById('fc-rate').value) || 1);
+  const growthPct = Math.max(0, parseFloat(document.getElementById('fc-growth').value) || 0);
+  const capacityPerYear = drones * rate;
+
+  const remaining = {};
+  const cumulativeTreated = {};
+  ranked.forEach(r => { remaining[r.state] = r.count; cumulativeTreated[r.state] = 0; });
+
+  const years = [];
+  const startYear = new Date().getFullYear();
+
+  for (let y = 1; y <= 5; y++) {
+    // untreated trees grow first
+    ranked.forEach(r => { remaining[r.state] = remaining[r.state] * (1 + growthPct / 100); });
+
+    // allocate capacity to the currently-worst states first
+    let capacityLeft = capacityPerYear;
+    const order = [...ranked].sort((a, b) => remaining[b.state] - remaining[a.state]);
+    const treatedThisYear = {};
+    order.forEach(r => {
+      const treat = Math.min(capacityLeft, remaining[r.state]);
+      treatedThisYear[r.state] = treat;
+      remaining[r.state] -= treat;
+      cumulativeTreated[r.state] += treat;
+      capacityLeft -= treat;
+    });
+
+    years.push({
+      year: startYear + y,
+      remaining: { ...remaining },
+      treatedThisYear,
+      cumulativeTreated: { ...cumulativeTreated }
+    });
+  }
+
+  const totalTreated5yr = ranked.reduce((sum, r) => sum + cumulativeTreated[r.state], 0);
+  const totalRemaining5yr = ranked.reduce((sum, r) => sum + remaining[r.state], 0);
+
+  summaryEl.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat"><div class="num">${Math.round(totalTreated5yr)}</div><div class="lbl">Trees treated (5yr, top 5 states)</div></div>
+      <div class="stat"><div class="num">${Math.round(totalRemaining5yr)}</div><div class="lbl">Still untreated after 5yr</div></div>
+      <div class="stat"><div class="num">${capacityPerYear}</div><div class="lbl">Treatment capacity / yr</div></div>
+    </div>
+  `;
+
+  // chart: cumulative trees treated across top 5 states, by year — with the number labeled at each point
+  const w = 620, h = 240, pad = 40;
+  const chartData = [
+    { year: startYear, total: 0 },
+    ...years.map(y => ({
+      year: y.year,
+      total: ranked.reduce((sum, r) => sum + y.cumulativeTreated[r.state], 0)
+    }))
+  ];
+  const maxV = Math.max(...chartData.map(d => d.total)) * 1.25 || 1;
+  const xStep = (w - pad * 2) / (chartData.length - 1 || 1);
+  const yScale = v => h - pad - (v / maxV) * (h - pad * 2);
+  const points = chartData.map((d, i) => `${pad + i * xStep},${yScale(d.total)}`).join(' ');
+  const dots = chartData.map((d, i) => {
+    const x = pad + i * xStep, y = yScale(d.total);
+    return `<circle cx="${x}" cy="${y}" r="4" fill="var(--accent-dark)"><title>${d.year}: ${Math.round(d.total)} treated</title></circle>`;
+  }).join('');
+  const valueLabels = chartData.map((d, i) => {
+    const x = pad + i * xStep, y = yScale(d.total);
+    return `<text x="${x}" y="${y - 10}" font-size="11" font-weight="700" fill="var(--accent-dark)" text-anchor="middle">${Math.round(d.total)}</text>`;
+  }).join('');
+  const yearLabels = chartData.map((d, i) => {
+    const x = pad + i * xStep;
+    return `<text x="${x}" y="${h - 10}" font-size="10" fill="var(--muted)" text-anchor="middle">${d.year}</text>`;
+  }).join('');
+
+  chartEl.innerHTML = `
+    <svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+      <line x1="${pad}" y1="${h - pad}" x2="${w - pad}" y2="${h - pad}" stroke="var(--border)" stroke-width="1"/>
+      <line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h - pad}" stroke="var(--border)" stroke-width="1"/>
+      <polyline points="${points}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>
+      ${dots}
+      ${valueLabels}
+      ${yearLabels}
+      <text x="${pad}" y="16" font-size="10" fill="var(--muted)">cumulative trees treated</text>
+    </svg>
+  `;
+}
+
+function render() {
+  const entries = loadEntries();
+  renderHistory(entries);
+  renderStats(entries);
+  renderStateRank(entries);
+  renderHeightChart(entries);
+  renderCountChart(entries);
+  renderStatusChart(entries);
+}
+
+populateStateOptions();
+document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
+render();
+</script>
+</body>
+</html>
+
+</body></html>
