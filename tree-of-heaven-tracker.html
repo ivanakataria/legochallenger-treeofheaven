@@ -190,6 +190,43 @@
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .filter-row { margin-bottom: 10px; }
+  .id-list {
+    margin: 10px 0 0;
+    padding-left: 18px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .id-list li { margin-bottom: 6px; }
+  .id-list b { color: var(--text); }
+  .id-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .id-photo {
+    margin: 0;
+  }
+  .id-photo img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    display: block;
+    background: var(--bg);
+  }
+  .id-photo figcaption {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+    line-height: 1.35;
+  }
+  @media (max-width: 520px) {
+    .id-photos { grid-template-columns: 1fr; }
+    .id-photo img { height: 200px; }
+  }
   table.forecast { width: 100%; border-collapse: collapse; font-size: 12px; }
   table.forecast th, table.forecast td { padding: 6px 8px; text-align: right; border-bottom: 1px solid var(--border); }
   table.forecast th:first-child, table.forecast td:first-child { text-align: left; }
@@ -217,6 +254,32 @@
   </div>
 
   <div class="card">
+    <h2>🪪 How to identify Tree of Heaven</h2>
+    <div class="why">
+      Before logging a sighting, confirm it's <b>Tree of Heaven</b> (<i>Ailanthus altissima</i>) —
+      not look-alikes like sumac, ash, or black walnut.
+    </div>
+    <ul class="id-list">
+      <li><b>Huge compound leaves:</b> one leaf can be 1–4 feet long with about 10–40 leaflets along a central stem.</li>
+      <li><b>Smooth leaflet edges:</b> sides are mostly smooth (not sharply saw-toothed like sumac).</li>
+      <li><b>Glandular teeth at the base:</b> look for 1–2 small bumps/teeth near where each leaflet attaches — a key ID clue.</li>
+      <li><b>Strong smell:</b> crushed leaves or broken twigs often smell like burnt peanut butter or spoiled nuts.</li>
+      <li><b>Twisted winged seeds:</b> female trees make clusters of flat, twisted samaras that often hang on into winter.</li>
+      <li><b>Bark:</b> young bark is smooth and gray-brown; older bark can look a bit like cantaloupe skin.</li>
+    </ul>
+    <div class="id-photos">
+      <figure class="id-photo">
+        <img src="images/toh-leaves.jpg" alt="Tree of Heaven leaves showing long compound leaves with many leaflets" loading="lazy">
+        <figcaption>Leaves: long compound leaves with many leaflets. Photo: Wikimedia Commons (Ailanthus altissima).</figcaption>
+      </figure>
+      <figure class="id-photo">
+        <img src="images/toh-seeds.jpg" alt="Tree of Heaven twisted winged seeds called samaras" loading="lazy">
+        <figcaption>Seeds: twisted winged samaras in clusters. Photo: Wikimedia Commons (Ailanthus altissima).</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="card">
     <h2>📍 Trees Near Me</h2>
     <div class="why" style="margin-bottom:10px;">
       Checks your device's current location against everything logged so far, and tells you if any Tree of Heaven
@@ -235,6 +298,17 @@
     </div>
     <button class="btn-primary" style="background:var(--accent-dark);" onclick="loadSampleData()">Load Sample Data (all states, 5 years)</button>
     <button class="btn-primary" style="background:var(--danger); margin-top:8px;" onclick="clearAllData()">Clear All Data</button>
+  </div>
+
+  <div class="card">
+    <h2>📤 Share / Backup (CSV)</h2>
+    <div class="why" style="margin-bottom:10px;">
+      Export your logged sightings as a spreadsheet-friendly CSV file you can email to a teacher or teammate,
+      or open in Excel / Google Sheets. Import brings a CSV back into this browser (adds to existing data).
+    </div>
+    <button class="btn-primary" onclick="exportCsv()">Download CSV</button>
+    <button class="btn-primary" style="background:var(--accent-dark); margin-top:8px;" onclick="document.getElementById('csv-import').click()">Import CSV</button>
+    <input type="file" id="csv-import" accept=".csv,text/csv" hidden onchange="importCsv(event)">
   </div>
 
   <div class="card">
@@ -408,6 +482,144 @@ function clearAllData() {
   saveEntries([]);
   render();
   showToast('All data cleared');
+}
+
+// CSV helpers — turn entries into a downloadable spreadsheet, and parse one back in.
+// Why CSV? Teachers/teammates can open it without this app; Excel/Sheets understand it.
+const CSV_HEADERS = ['date', 'state', 'location', 'height', 'diameter', 'count', 'status', 'notes', 'lat', 'lon'];
+
+function csvEscape(value) {
+  // Wrap in quotes and double any inner quotes so commas/newlines in notes don't break columns.
+  const s = value == null ? '' : String(value);
+  return '"' + s.replace(/"/g, '""') + '"';
+}
+
+function exportCsv() {
+  const entries = loadEntries();
+  if (entries.length === 0) {
+    showToast('No entries to export yet');
+    return;
+  }
+  const lines = [CSV_HEADERS.join(',')];
+  // Sort oldest→newest so the file reads like a log when opened in a spreadsheet.
+  const sorted = [...entries].sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  sorted.forEach(e => {
+    lines.push(CSV_HEADERS.map(h => csvEscape(e[h])).join(','));
+  });
+  // BOM helps Excel on Windows recognize UTF-8 (accents in place names, etc.).
+  const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const stamp = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `tree-of-heaven-tracker-${stamp}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast(`Exported ${entries.length} entries`);
+}
+
+function parseCsvLine(line) {
+  // Minimal RFC-style parser: commas split fields; quotes protect commas; "" → "
+  const fields = [];
+  let cur = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') { cur += '"'; i++; }
+        else inQuotes = false;
+      } else {
+        cur += ch;
+      }
+    } else if (ch === '"') {
+      inQuotes = true;
+    } else if (ch === ',') {
+      fields.push(cur);
+      cur = '';
+    } else {
+      cur += ch;
+    }
+  }
+  fields.push(cur);
+  return fields;
+}
+
+function importCsv(event) {
+  const file = event.target.files && event.target.files[0];
+  event.target.value = ''; // allow re-importing the same file later
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      let text = String(reader.result || '');
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1); // strip BOM if present
+      const rawLines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+      if (rawLines.length < 2) {
+        showToast('CSV looks empty');
+        return;
+      }
+
+      const headers = parseCsvLine(rawLines[0]).map(h => h.trim().toLowerCase());
+      const required = ['date', 'state', 'location'];
+      if (!required.every(h => headers.includes(h))) {
+        showToast('CSV needs date, state, location columns');
+        return;
+      }
+
+      const imported = [];
+      for (let i = 1; i < rawLines.length; i++) {
+        const cols = parseCsvLine(rawLines[i]);
+        const row = {};
+        headers.forEach((h, idx) => { row[h] = (cols[idx] != null ? cols[idx] : '').trim(); });
+        if (!row.date || !row.state || !row.location) continue;
+
+        const height = parseFloat(row.height);
+        const diameter = parseFloat(row.diameter);
+        const count = parseInt(row.count, 10);
+        const lat = parseFloat(row.lat);
+        const lon = parseFloat(row.lon);
+        const status = ['none', 'monitoring', 'cleared'].includes(row.status) ? row.status : 'none';
+
+        imported.push({
+          id: Date.now() + i, // unique ids even if many rows import in one tick
+          date: row.date,
+          state: row.state,
+          location: row.location,
+          height: isNaN(height) ? null : height,
+          diameter: isNaN(diameter) ? null : diameter,
+          count: isNaN(count) ? null : count,
+          status,
+          notes: row.notes || '',
+          lat: isNaN(lat) ? null : lat,
+          lon: isNaN(lon) ? null : lon
+        });
+      }
+
+      if (imported.length === 0) {
+        showToast('No valid rows found in CSV');
+        return;
+      }
+
+      const existing = loadEntries();
+      const ok = confirm(`Import ${imported.length} row(s) and keep your existing ${existing.length} entries?`);
+      if (!ok) return;
+
+      const merged = existing.concat(imported);
+      merged.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+      saveEntries(merged);
+      render();
+      showToast(`Imported ${imported.length} entries`);
+    } catch (err) {
+      console.error(err);
+      showToast('Could not read that CSV');
+    }
+  };
+  reader.onerror = () => showToast('Could not read that file');
+  reader.readAsText(file);
 }
 
 function loadEntries() {
