@@ -353,6 +353,40 @@
   :root[data-theme="dark"] .companion-banner {
     background: linear-gradient(135deg, #1e2818 0%, #1e2517 55%, #1a2430 100%);
   }
+  .kids-compare {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .kids-compare th, .kids-compare td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+    line-height: 1.45;
+  }
+  .kids-compare th {
+    background: var(--bg);
+    color: var(--accent-dark);
+    font-weight: 700;
+  }
+  .kids-compare td:first-child {
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+    width: 28%;
+  }
+  .kids-compare .remember {
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-dark);
+    text-align: center;
+  }
+  @media (max-width: 520px) {
+    .kids-compare td:first-child { white-space: normal; width: auto; }
+  }
 </style>
 </head>
 <body>
@@ -382,6 +416,48 @@
   </div>
 
   <div class="tab-panel active" id="tab-log">
+  <div class="card">
+    <h2>🧒 Two sites, two jobs (kid-friendly)</h2>
+    <div class="why">We work <b>together</b> with iNaturalist — like teammates, not twins.</div>
+    <table class="kids-compare" aria-label="How this site and iNaturalist are different">
+      <thead>
+        <tr>
+          <th></th>
+          <th>iNaturalist</th>
+          <th>Our Tree Tracker</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>What for?</td>
+          <td>Finding out <b>what</b> a plant or animal is</td>
+          <td>Helping take care of <b>Tree of Heaven</b> (a plant that spreads too much)</td>
+        </tr>
+        <tr>
+          <td>Like…</td>
+          <td>A nature <b>detective</b> app</td>
+          <td>A <b>to-do list</b> for trees that need help</td>
+        </tr>
+        <tr>
+          <td>You do</td>
+          <td>Take a photo → learn the name</td>
+          <td>Write down where the tree is → track if someone is treating it</td>
+        </tr>
+        <tr>
+          <td>Who helps?</td>
+          <td>Lots of nature fans online</td>
+          <td>Scientists / helpers who check and treat trees</td>
+        </tr>
+        <tr>
+          <td>Big idea</td>
+          <td>“What did I find?”</td>
+          <td>“What should we do about it?”</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="remember">Easy remember: iNaturalist = <b>name it</b>. Our site = <b>fix it</b>.</div>
+  </div>
+
   <div class="card">
     <h2>🔍 Why this tracker exists</h2>
     <div class="why">
