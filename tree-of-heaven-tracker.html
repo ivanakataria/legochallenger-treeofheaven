@@ -278,6 +278,81 @@
   }
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
+  .companion-banner {
+    background: linear-gradient(135deg, #e8f3e6 0%, #f4f6f1 55%, #eef4f8 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+  .companion-banner b { color: var(--text); }
+  .companion-banner a { color: var(--accent-dark); font-weight: 600; }
+  .inat-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0 4px;
+  }
+  .inat-links a {
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--accent-dark);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .inat-obs {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .inat-obs img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    flex-shrink: 0;
+  }
+  .inat-obs .info { font-size: 13px; line-height: 1.45; flex: 1; min-width: 0; }
+  .inat-obs .meta { color: var(--muted); font-size: 12px; }
+  .inat-obs .actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; flex-shrink: 0; }
+  .btn-secondary {
+    background: var(--bg);
+    color: var(--accent-dark);
+    border: 1px solid var(--border);
+    width: auto;
+    margin-top: 0;
+    font-weight: 600;
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+  .btn-secondary:disabled {
+    opacity: 0.55;
+    cursor: default;
+  }
+  .grade-research { background: #d7f0d2; color: #2d5c29; }
+  .grade-needsid { background: #fde9c8; color: #8a5a12; }
+  .grade-casual { background: #eee; color: #777; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .companion-banner {
+      background: linear-gradient(135deg, #1e2818 0%, #1e2517 55%, #1a2430 100%);
+    }
+  }
+  :root[data-theme="dark"] .companion-banner {
+    background: linear-gradient(135deg, #1e2818 0%, #1e2517 55%, #1a2430 100%);
+  }
 </style>
 </head>
 <body>
@@ -285,15 +360,22 @@
   <header>
     <div class="emoji">🌳</div>
     <h1>Tree of Heaven Tracker</h1>
-    <div class="sub">Log Tree of Heaven sightings across states, watch where it's most concentrated, and track treatment progress over a five-year window.</div>
+    <div class="sub">A treatment companion to iNaturalist — track invasive management, scientist requests, and five-year forecasts. Species ID and biodiversity observations stay on iNaturalist.</div>
   </header>
+
+  <div class="companion-banner">
+    <b>Works with iNaturalist, not instead of it.</b>
+    Use <a href="https://www.inaturalist.org/taxa/57278-Ailanthus-altissima" target="_blank" rel="noopener">iNaturalist</a>
+    or <a href="https://www.inaturalist.org/pages/seek_app" target="_blank" rel="noopener">Seek</a>
+    to identify and record Tree of Heaven. Bring confirmed spots here to manage treatment status, scientist visits, and long-term clearance.
+  </div>
 
   <div class="notice">
     ⏰ <b>Heads up:</b> this page can't send you a notification on its own after five years — browsers don't allow that. Set a calendar reminder for your five-year check-in date; all the data here will be waiting and ready when you open it again.
   </div>
 
   <div class="tabbar">
-    <button class="tab-btn active" id="tabbtn-log" onclick="switchTab('log')">🌳 Identify &amp; Log</button>
+    <button class="tab-btn active" id="tabbtn-log" onclick="switchTab('log')">🌳 Track &amp; Treat</button>
     <button class="tab-btn" id="tabbtn-sci" onclick="switchTab('sci')">🔬 Scientists &amp; Treatment</button>
     <button class="tab-btn" id="tabbtn-overview" onclick="switchTab('overview')">📊 Overview &amp; Summary</button>
     <button class="tab-btn" id="tabbtn-admin" onclick="switchTab('admin')">🛠️ Admin</button>
@@ -301,17 +383,22 @@
 
   <div class="tab-panel active" id="tab-log">
   <div class="card">
-    <h2>🔍 Why we're measuring</h2>
+    <h2>🔍 Why this tracker exists</h2>
     <div class="why">
-      Tree of Heaven is an <b>invasive species</b> that spreads fast. Tracking where it's most concentrated across states
-      helps build a data-backed case for where treatment should be prioritized first.
+      Tree of Heaven is an <b>invasive species</b> that spreads fast. iNaturalist is the right place for community ID and biodiversity records.
+      This tool picks up where that leaves off: treatment status, scientist requests, and forecasts for where management should be prioritized.
     </div>
   </div>
 
   <div class="card">
-    <h2>🔎 How to Confirm It's Tree of Heaven</h2>
+    <h2>🔎 Field quick-check (confirm on iNaturalist)</h2>
     <div class="why">
-      Quick field checklist before logging a sighting — if you're not sure, log it anyway and have a scientist confirm it below:
+      Use this short field checklist to decide whether a plant is worth a closer look.
+      For photo ID and community confirmation, open
+      <a href="https://www.inaturalist.org/taxa/57278-Ailanthus-altissima" target="_blank" rel="noopener" style="color:var(--accent-dark);font-weight:600;">iNaturalist</a>
+      or the
+      <a href="https://www.inaturalist.org/pages/seek_app" target="_blank" rel="noopener" style="color:var(--accent-dark);font-weight:600;">Seek app</a>
+      — then import the observation here when you're ready to track treatment.
       <ul style="margin:8px 0 0; padding-left:18px; line-height:1.6;">
         <li><b>Leaves:</b> long compound leaves (1–4 ft) with 10–41 smooth-edged leaflets, each with 1–2 small notched "teeth" near its base.</li>
         <li><b>Smell:</b> crushed leaves or stems smell like rancid peanut butter or burnt rubber.</li>
@@ -346,14 +433,47 @@
         <figcaption>Look-alike tip: Tree of Heaven leaflets have smoother edges than sumac (comparison photo).</figcaption>
       </figure>
     </div>
-    <div class="why" style="margin-top:10px; font-size:11px;">Photos: Wikimedia Commons (<i>Ailanthus altissima</i>).</div>
+    <div class="why" style="margin-top:10px; font-size:11px;">Photos: Wikimedia Commons (<i>Ailanthus altissima</i>). For authoritative ID help, use iNaturalist / Seek.</div>
   </div>
 
   <div class="card">
-    <h2>📍 Trees Near Me</h2>
+    <h2>🌿 iNaturalist — nearby Tree of Heaven</h2>
+    <div class="why" style="margin-bottom:8px;">
+      Pull live observations of <i>Ailanthus altissima</i> from iNaturalist, then import selected ones into this treatment tracker.
+      Research-grade IDs are marked confirmed here; treatment status still starts as “not treated” so you can manage invasive control in this app.
+    </div>
+    <div class="inat-links">
+      <a href="https://www.inaturalist.org/taxa/57278-Ailanthus-altissima" target="_blank" rel="noopener">Taxon page</a>
+      <a href="https://www.inaturalist.org/observations?taxon_id=57278" target="_blank" rel="noopener">Browse observations</a>
+      <a href="https://www.inaturalist.org/observations/upload?taxon_id=57278" target="_blank" rel="noopener">Observe / upload</a>
+      <a href="https://www.inaturalist.org/pages/seek_app" target="_blank" rel="noopener">Get Seek</a>
+      <a href="https://www.inaturalist.org/" target="_blank" rel="noopener">iNaturalist home</a>
+    </div>
+    <div class="row2" style="margin-top:12px;">
+      <div>
+        <label>Filter by state (optional)</label>
+        <select id="inat-state">
+          <option value="">Any / use location</option>
+        </select>
+      </div>
+      <div>
+        <label>Radius (miles, with location)</label>
+        <input type="number" id="inat-radius" min="1" max="250" value="50" step="1">
+      </div>
+    </div>
+    <div class="row2" style="margin-top:4px;">
+      <button class="btn-primary" style="margin-top:10px;" onclick="fetchInatNearMe()">📍 Near my location</button>
+      <button class="btn-primary" style="margin-top:10px; background:var(--accent-dark);" onclick="fetchInatByState()">Fetch by state</button>
+    </div>
+    <div id="inat-status" style="font-size:12px; color:var(--muted); margin-top:8px;"></div>
+    <div id="inat-results" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card">
+    <h2>📍 Trees Near Me (local tracker)</h2>
     <div class="why" style="margin-bottom:10px;">
-      Checks your device's current location against everything logged so far, and tells you if any Tree of Heaven
-      has been recorded near you (within about 30 miles) or anywhere in your state.
+      Checks your device's current location against trees already logged in <b>this</b> tracker, and tells you if any Tree of Heaven
+      has been recorded near you (within about 30 miles) or anywhere in your state. For community observations, use the iNaturalist panel above.
     </div>
     <button class="btn-primary" onclick="checkNearMe()">Check My Area</button>
     <div id="nearme-result" style="margin-top:12px;"></div>
@@ -382,7 +502,11 @@
   </div>
 
   <div class="card">
-    <h2>➕ New Sighting / Measurement</h2>
+    <h2>➕ New treatment site / measurement</h2>
+    <div class="why" style="margin-bottom:10px;">
+      Prefer logging biodiversity observations on iNaturalist first, then import them above — or add a treatment site manually here
+      when you already know the spot and want to track management.
+    </div>
     <div class="row2">
       <div>
         <label>Date</label>
@@ -676,6 +800,10 @@
 <script>
 const STORAGE_KEY = 'toh-measurements-v2';
 const OLD_STORAGE_KEY = 'toh-measurements';
+const INAT_TAXON_ID = 57278;
+const INAT_API = 'https://api.inaturalist.org/v1/observations';
+const INAT_UA = 'TreeOfHeavenTracker/1.0 (companion to iNaturalist; invasive treatment workflow; local HTML app)';
+const INAT_PLACE_IDS = {"Alabama":19,"Alaska":6,"Arizona":40,"Arkansas":36,"California":14,"Colorado":34,"Connecticut":49,"Delaware":4,"Florida":21,"Georgia":23,"Hawaii":11,"Idaho":22,"Illinois":35,"Indiana":20,"Iowa":24,"Kansas":25,"Kentucky":26,"Louisiana":27,"Maine":17,"Maryland":39,"Massachusetts":2,"Michigan":29,"Minnesota":38,"Mississippi":37,"Missouri":28,"Montana":16,"Nebraska":3,"Nevada":50,"New Hampshire":41,"New Jersey":51,"New Mexico":9,"New York":48,"North Carolina":30,"North Dakota":13,"Ohio":31,"Oklahoma":12,"Oregon":10,"Pennsylvania":42,"Rhode Island":8,"South Carolina":43,"South Dakota":44,"Tennessee":45,"Texas":18,"Utah":52,"Vermont":47,"Virginia":7,"Washington":46,"West Virginia":33,"Wisconsin":32,"Wyoming":15};
 
 const STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware",
 "Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine",
@@ -684,11 +812,14 @@ const STATES = ["Alabama","Alaska","Arizona","Arkansas","California","Colorado",
 "Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont",
 "Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
 
+let lastInatResults = [];
+
 function populateStateOptions() {
   const sel = document.getElementById('f-state');
   const filt = document.getElementById('chart-filter');
   const netSel = document.getElementById('network-state');
   const respSel = document.getElementById('response-state-filter');
+  const inatSel = document.getElementById('inat-state');
   STATES.forEach(s => {
     const o1 = document.createElement('option'); o1.value = s; o1.textContent = s;
     sel.appendChild(o1);
@@ -698,6 +829,10 @@ function populateStateOptions() {
     netSel.appendChild(o3);
     const o4 = document.createElement('option'); o4.value = s; o4.textContent = s;
     respSel.appendChild(o4);
+    if (inatSel) {
+      const o5 = document.createElement('option'); o5.value = s; o5.textContent = s;
+      inatSel.appendChild(o5);
+    }
   });
 }
 
@@ -923,7 +1058,7 @@ function doClearAllData() {
 
 // CSV helpers — turn entries into a downloadable spreadsheet, and parse one back in.
 // Why CSV? Teachers/teammates can open it without this app; Excel/Sheets understand it.
-const CSV_HEADERS = ['date', 'state', 'location', 'height', 'diameter', 'count', 'status', 'notes', 'lat', 'lon'];
+const CSV_HEADERS = ['date', 'state', 'location', 'height', 'diameter', 'count', 'status', 'notes', 'lat', 'lon', 'inatId', 'inatUri', 'inatQualityGrade', 'validationStatus', 'validatedBy'];
 
 function csvEscape(value) {
   // Wrap in quotes and double any inner quotes so commas/newlines in notes don't break columns.
@@ -1021,6 +1156,7 @@ function importCsv(event) {
         const lon = parseFloat(row.lon);
         const status = ['none', 'monitoring', 'cleared'].includes(row.status) ? row.status : 'none';
 
+        const inatId = row.inatid || row.inat_id || '';
         imported.push({
           id: Date.now() + i, // unique ids even if many rows import in one tick
           date: row.date,
@@ -1032,7 +1168,13 @@ function importCsv(event) {
           status,
           notes: row.notes || '',
           lat: isNaN(lat) ? null : lat,
-          lon: isNaN(lon) ? null : lon
+          lon: isNaN(lon) ? null : lon,
+          validationStatus: row.validationstatus || 'unverified',
+          validatedBy: row.validatedby || '',
+          requestId: null,
+          inatId: inatId ? Number(inatId) || inatId : null,
+          inatUri: row.inaturi || (inatId ? `https://www.inaturalist.org/observations/${inatId}` : null),
+          inatQualityGrade: row.inatqualitygrade || null
         });
       }
 
@@ -1042,14 +1184,17 @@ function importCsv(event) {
       }
 
       const existing = loadEntries();
-      const ok = confirm(`Import ${imported.length} row(s) and keep your existing ${existing.length} entries?`);
+      const existingInat = new Set(existing.filter(e => e.inatId != null).map(e => String(e.inatId)));
+      const deduped = imported.filter(e => e.inatId == null || !existingInat.has(String(e.inatId)));
+      const skipped = imported.length - deduped.length;
+      const ok = confirm(`Import ${deduped.length} row(s)${skipped ? ` (skipping ${skipped} duplicate iNat id${skipped === 1 ? '' : 's'})` : ''} and keep your existing ${existing.length} entries?`);
       if (!ok) return;
 
-      const merged = existing.concat(imported);
+      const merged = existing.concat(deduped);
       merged.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
       saveEntries(merged);
       render();
-      showToast(`Imported ${imported.length} entries`);
+      showToast(`Imported ${deduped.length} entries`);
     } catch (err) {
       console.error(err);
       showToast('Could not read that CSV');
@@ -1330,6 +1475,191 @@ function validationLabel(status) {
   if (status === 'rejected') return '<span class="status-pill" style="background:#f6d6cd;color:#8a3a22;">🔬 Not ToH</span>';
   if (status === 'second-opinion') return '<span class="status-pill status-monitoring">🔬 2nd opinion</span>';
   return '<span class="status-pill status-none">Unverified</span>';
+}
+
+function qualityGradeLabel(grade) {
+  if (grade === 'research') return '<span class="status-pill grade-research">Research grade</span>';
+  if (grade === 'needs_id') return '<span class="status-pill grade-needsid">Needs ID</span>';
+  return '<span class="status-pill grade-casual">Casual</span>';
+}
+
+function stateFromPlaceGuess(placeGuess) {
+  if (!placeGuess) return '';
+  const parts = placeGuess.split(',').map(p => p.trim());
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const part = parts[i];
+    if (STATES.includes(part)) return part;
+    const byAbbr = Object.keys(STATE_ABBR).find(name => STATE_ABBR[name] === part.toUpperCase());
+    if (byAbbr) return byAbbr;
+  }
+  return '';
+}
+
+function parseInatLocation(obs) {
+  if (!obs.location) return { lat: null, lon: null };
+  const [latStr, lonStr] = String(obs.location).split(',');
+  const lat = parseFloat(latStr);
+  const lon = parseFloat(lonStr);
+  return {
+    lat: Number.isFinite(lat) ? lat : null,
+    lon: Number.isFinite(lon) ? lon : null
+  };
+}
+
+function inatHeaders() {
+  // Browsers may strip User-Agent; X-Via is allowed by iNat CORS and identifies this companion app.
+  return {
+    'Accept': 'application/json',
+    'User-Agent': INAT_UA,
+    'X-Via': INAT_UA
+  };
+}
+
+async function fetchInatObservations(params) {
+  const url = new URL(INAT_API);
+  url.searchParams.set('taxon_id', String(INAT_TAXON_ID));
+  url.searchParams.set('per_page', '20');
+  url.searchParams.set('order_by', 'observed_on');
+  url.searchParams.set('order', 'desc');
+  url.searchParams.set('photos', 'true');
+  Object.entries(params).forEach(([k, v]) => {
+    if (v != null && v !== '') url.searchParams.set(k, String(v));
+  });
+  const res = await fetch(url.toString(), { headers: inatHeaders() });
+  if (!res.ok) throw new Error(`iNaturalist API error (${res.status})`);
+  return res.json();
+}
+
+async function fetchInatNearMe() {
+  const statusEl = document.getElementById('inat-status');
+  const radiusMiles = parseFloat(document.getElementById('inat-radius').value) || 50;
+  statusEl.textContent = 'Getting your location…';
+  try {
+    const coords = await getCurrentPosition();
+    statusEl.textContent = 'Fetching nearby Tree of Heaven from iNaturalist…';
+    const data = await fetchInatObservations({
+      lat: coords.latitude,
+      lng: coords.longitude,
+      radius: Math.min(Math.max(radiusMiles, 1), 250)
+    });
+    lastInatResults = data.results || [];
+    statusEl.textContent = `Found ${data.total_results.toLocaleString()} nearby observations (showing ${lastInatResults.length}).`;
+    renderInatResults(lastInatResults);
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = err && err.code === 1
+      ? 'Location permission denied — pick a state and use “Fetch by state”, or allow location access.'
+      : (err.message || 'Could not fetch nearby observations.');
+    document.getElementById('inat-results').innerHTML = '';
+  }
+}
+
+async function fetchInatByState() {
+  const statusEl = document.getElementById('inat-status');
+  const state = document.getElementById('inat-state').value;
+  if (!state) {
+    showToast('Pick a state first (or use Near my location)');
+    return;
+  }
+  const placeId = INAT_PLACE_IDS[state];
+  if (!placeId) {
+    showToast('No iNaturalist place id for that state');
+    return;
+  }
+  statusEl.textContent = `Fetching Tree of Heaven observations in ${state}…`;
+  try {
+    const data = await fetchInatObservations({ place_id: placeId });
+    lastInatResults = data.results || [];
+    statusEl.textContent = `Found ${data.total_results.toLocaleString()} observations in ${state} (showing ${lastInatResults.length}).`;
+    renderInatResults(lastInatResults);
+  } catch (err) {
+    console.error(err);
+    statusEl.textContent = err.message || 'Could not fetch observations.';
+    document.getElementById('inat-results').innerHTML = '';
+  }
+}
+
+function renderInatResults(results) {
+  const container = document.getElementById('inat-results');
+  if (!results.length) {
+    container.innerHTML = '<div class="empty">No observations matched that search.</div>';
+    return;
+  }
+  const existingIds = new Set(
+    loadEntries().filter(e => e.inatId != null).map(e => String(e.inatId))
+  );
+  container.innerHTML = results.map(obs => {
+    const photo = obs.photos && obs.photos[0]
+      ? (obs.photos[0].url || obs.photos[0].square_url || '').replace('/square.', '/square.')
+      : '';
+    const already = existingIds.has(String(obs.id));
+    const place = obs.place_guess || 'Unknown place';
+    const when = obs.observed_on || (obs.created_at_details && obs.created_at_details.date) || '—';
+    return `
+      <div class="inat-obs" data-inat-id="${obs.id}">
+        ${photo ? `<img src="${photo}" alt="iNaturalist photo" loading="lazy">` : '<div style="width:56px;height:56px;border-radius:8px;background:var(--bg);border:1px solid var(--border);flex-shrink:0;"></div>'}
+        <div class="info">
+          <div><b>${escapeHtml(place)}</b> ${qualityGradeLabel(obs.quality_grade)}</div>
+          <div class="meta">${escapeHtml(when)} · <a href="${escapeHtml(obs.uri)}" target="_blank" rel="noopener">iNat #${obs.id}</a></div>
+          <div class="meta">${obs.user && obs.user.login ? 'Observer: ' + escapeHtml(obs.user.login) : ''}</div>
+        </div>
+        <div class="actions">
+          <button class="btn-secondary" ${already ? 'disabled' : ''} onclick="importInatObservation(${obs.id})">${already ? 'Imported' : 'Import'}</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function importInatObservation(inatId) {
+  const obs = lastInatResults.find(o => o.id === inatId);
+  if (!obs) {
+    showToast('Observation not in current results — fetch again');
+    return;
+  }
+  const entries = loadEntries();
+  if (entries.some(e => String(e.inatId) === String(inatId))) {
+    showToast('Already imported from iNaturalist');
+    renderInatResults(lastInatResults);
+    return;
+  }
+  const { lat, lon } = parseInatLocation(obs);
+  const state = stateFromPlaceGuess(obs.place_guess) || document.getElementById('inat-state').value || '';
+  if (!state) {
+    showToast('Could not detect state — pick a state filter, then import again');
+    return;
+  }
+  const research = obs.quality_grade === 'research';
+  const date = obs.observed_on || (obs.created_at_details && obs.created_at_details.date) || new Date().toISOString().slice(0, 10);
+  const location = obs.place_guess || `iNaturalist observation ${inatId}`;
+  entries.push({
+    id: Date.now() + Math.floor(Math.random() * 1000),
+    date,
+    state,
+    location,
+    city: null,
+    zip: null,
+    height: null,
+    diameter: null,
+    count: 1,
+    status: 'none',
+    notes: research
+      ? `Imported from iNaturalist (research grade). ${obs.uri}`
+      : `Imported from iNaturalist (${obs.quality_grade || 'unreviewed'}). Confirm ID on iNaturalist if needed. ${obs.uri}`,
+    lat,
+    lon,
+    validationStatus: research ? 'confirmed' : 'unverified',
+    validatedBy: research ? 'iNaturalist research grade' : '',
+    requestId: null,
+    inatId: obs.id,
+    inatUri: obs.uri || `https://www.inaturalist.org/observations/${obs.id}`,
+    inatQualityGrade: obs.quality_grade || null
+  });
+  entries.sort((a, b) => a.date.localeCompare(b.date));
+  saveEntries(entries);
+  render();
+  renderInatResults(lastInatResults);
+  showToast(research ? 'Imported (research grade → confirmed) 🌱' : 'Imported — still needs confirmation 🌱');
 }
 
 function treeTagId(e) {
@@ -1946,7 +2276,9 @@ function renderHistory(entries) {
     filtered = entries.filter(e =>
       (e.state || '').toLowerCase().includes(query) ||
       (e.location || '').toLowerCase().includes(query) ||
-      (e.notes || '').toLowerCase().includes(query)
+      (e.notes || '').toLowerCase().includes(query) ||
+      (e.inatId != null && String(e.inatId).includes(query)) ||
+      (e.inatUri || '').toLowerCase().includes(query)
     );
   }
 
@@ -2011,6 +2343,7 @@ function renderHistory(entries) {
         <div>${escapeHtml(e.location)}</div>
         <div>Height: ${e.height != null ? e.height + ' ft' : '—'} · Trunk: ${e.diameter != null ? e.diameter + ' in' : '—'} · Count: ${e.count != null ? e.count : '—'}</div>
         ${e.validatedBy ? `<div class="notes">Validated by: ${escapeHtml(e.validatedBy)}</div>` : ''}
+        ${e.inatUri ? `<div class="notes">🌿 <a href="${escapeHtml(e.inatUri)}" target="_blank" rel="noopener">iNaturalist #${escapeHtml(String(e.inatId))}</a>${e.inatQualityGrade ? ' · ' + escapeHtml(e.inatQualityGrade) : ''}</div>` : ''}
         ${e.notes ? `<div class="notes">${escapeHtml(e.notes)}</div>` : ''}
         ${reqBadge}
       </div>
@@ -2956,7 +3289,7 @@ function render() {
 populateStateOptions();
 document.getElementById('f-date').value = new Date().toISOString().slice(0, 10);
 
-// Load sample trees + sample scientist requests by default on first visit, so the Identify & Log
+// Load sample trees + sample scientist requests by default on first visit, so the Track & Treat
 // and Scientists & Treatment tabs both have something to show right away.
 if (loadEntries().length === 0 && loadRequests().length === 0) {
   doLoadSampleRequests();
