@@ -2,17 +2,33 @@
 
 # Tree of Heaven Tracker
 
-Log Tree of Heaven sightings across states, watch where it's most concentrated, and track treatment progress over a five-year window.
+A treatment companion to iNaturalist — track invasive management, scientist requests, and five-year forecasts. Species ID and biodiversity observations stay on iNaturalist / Seek.
 
 ⏰ **Heads up:** this page can't send you a notification on its own after five years — browsers don't allow that. Set a calendar reminder for your five-year check-in date; all the data here will be waiting and ready when you open it again.
 
-## 🔍 Why we're measuring
+## Companion positioning
 
-Tree of Heaven is an **invasive species** that spreads fast. Tracking where it's most concentrated across states helps build a data-backed case for where treatment should be prioritized first.
+Works with iNaturalist, not instead of it. Use iNaturalist or Seek to identify and record Tree of Heaven. Bring confirmed spots here to manage treatment status, scientist visits, and long-term clearance.
 
-## 🔎 How to Confirm It's Tree of Heaven
+## 🧒 Two sites, two jobs (kid-friendly)
 
-Quick field checklist before logging a sighting — if you're not sure, log it anyway and have a scientist confirm it below:
+| | iNaturalist | Our Tree Tracker |
+|---|---|---|
+| What for? | Finding out **what** a plant or animal is | Helping take care of **Tree of Heaven** |
+| Like… | A nature **detective** app | A **to-do list** for trees that need help |
+| You do | Take a photo → learn the name | Write down where it is → track treatment |
+| Who helps? | Nature fans online | Scientists / helpers who treat trees |
+| Big idea | “What did I find?” | “What should we do about it?” |
+
+Easy remember: iNaturalist = **name it**. Our site = **fix it**.
+
+## 🔍 Why this tracker exists
+
+Tree of Heaven is an **invasive species** that spreads fast. iNaturalist is the right place for community ID and biodiversity records. This tool picks up where that leaves off: treatment status, scientist requests, and forecasts for where management should be prioritized.
+
+## 🔎 Field quick-check (confirm on iNaturalist)
+
+Short field checklist to decide whether a plant is worth a closer look. For photo ID and community confirmation, open iNaturalist (taxon *Ailanthus altissima*, taxon_id=57278) or the Seek app — then import the observation here when you're ready to track treatment.
 
 - **Leaves:** long compound leaves (1–4 ft) with 10–41 smooth-edged leaflets, each with 1–2 small notched "teeth" near its base.
 - **Smell:** crushed leaves or stems smell like rancid peanut butter or burnt rubber.
@@ -20,15 +36,23 @@ Quick field checklist before logging a sighting — if you're not sure, log it a
 - **Seeds:** clusters of twisted, tan-to-reddish papery samaras (helicopter-style seed pods) in late summer/fall.
 - **Where it grows:** disturbed soil — roadsides, fence lines, vacant lots, rail corridors.
 
-## 📍 Trees Near Me
+## 🌿 iNaturalist — nearby Tree of Heaven
 
-Checks your device's current location against everything logged so far, and tells you if any Tree of Heaven has been recorded near you (within about 30 miles) or anywhere in your state.
+Pull live observations from `https://api.inaturalist.org/v1/observations` (taxon_id=57278). Support geo radius via device location and/or US state place filter. Links: taxon page, browse observations, observe/upload, Seek, iNaturalist home.
+
+Import selected observations into the local treatment tracker (localStorage) with iNat id/uri; skip duplicates. Research-grade → validation confirmed; treatment status still starts as not treated so invasive control is managed here.
+
+## 📍 Trees Near Me (local tracker)
+
+Checks your device's current location against trees already logged in **this** tracker (within about 30 miles) or anywhere in your state. For community observations, use the iNaturalist panel.
 
 ## 🧪 Sample Data
 
 This loads **made-up example data** — one entry per year for 5 years (2022–2026), for all 50 states — so you can see how the charts and rankings look with a full dataset. It's simulated, not real field data, so swap it out for your own measurements as you collect them.
 
-## ➕ New Sighting / Measurement
+## ➕ New treatment site / Measurement
+
+Prefer logging biodiversity observations on iNaturalist first, then import them — or add a treatment site manually when you already know the spot and want to track management.
 
 Date
 
@@ -50,7 +74,7 @@ Treatment status Notes
 
 ## 🔬 Scientist Network & Field Validation
 
-Before a drone treats a tree, a scientist should confirm the sighting really is Tree of Heaven — and after a treatment, someone needs to check back on it. Scientists here are a **sample directory** to show how it would work; swap in your state's forestry extension office, a university plant-diagnostic lab, or a master naturalist program for a real deployment.
+Before a drone treats a tree, a scientist should confirm the sighting really is Tree of Heaven — and after a treatment, someone needs to check back on it. Scientists here are a **sample directory** to show how it would work; swap in your state's forestry extension office, a university plant-diagnostic lab, or a master naturalist program for a real deployment. Community ID still belongs on iNaturalist; this network is for treatment / field validation workflow.
 
 ## 👩‍🔬 Scientists
 
@@ -98,7 +122,7 @@ Not treated vs. monitoring vs. treating vs. cleared, as a share of total trees c
 
 ## 📍 Tree Status by Location
 
-Current status of every logged site (most recent entry per location) — requests sent to a scientist, monitoring or treatment underway, cleared, or flagged invalid with the reason.
+Current status of every logged site (most recent entry per location) — requests sent to a scientist, monitoring or treatment underway, cleared, or flagged invalid with the reason. Entries imported from iNaturalist show an iNat link.
 
 ## 🚁 5-Year Treatment Forecast
 
