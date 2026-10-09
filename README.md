@@ -6,6 +6,8 @@ Open `tree-of-heaven-tracker.html` in a browser (no build step). Data stays in `
 
 ## What this tool is (and isn’t)
 
+**Kid-friendly reminder:** iNaturalist = **name it**. This site = **fix it**.
+
 | Do this here | Do this on iNaturalist / Seek |
 | --- | --- |
 | Track treatment status & clearance | Species identification |

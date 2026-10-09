@@ -10,6 +10,18 @@ A treatment companion to iNaturalist — track invasive management, scientist re
 
 Works with iNaturalist, not instead of it. Use iNaturalist or Seek to identify and record Tree of Heaven. Bring confirmed spots here to manage treatment status, scientist visits, and long-term clearance.
 
+## 🧒 Two sites, two jobs (kid-friendly)
+
+| | iNaturalist | Our Tree Tracker |
+|---|---|---|
+| What for? | Finding out **what** a plant or animal is | Helping take care of **Tree of Heaven** |
+| Like… | A nature **detective** app | A **to-do list** for trees that need help |
+| You do | Take a photo → learn the name | Write down where it is → track treatment |
+| Who helps? | Nature fans online | Scientists / helpers who treat trees |
+| Big idea | “What did I find?” | “What should we do about it?” |
+
+Easy remember: iNaturalist = **name it**. Our site = **fix it**.
+
 ## 🔍 Why this tracker exists
 
 Tree of Heaven is an **invasive species** that spreads fast. iNaturalist is the right place for community ID and biodiversity records. This tool picks up where that leaves off: treatment status, scientist requests, and forecasts for where management should be prioritized.
